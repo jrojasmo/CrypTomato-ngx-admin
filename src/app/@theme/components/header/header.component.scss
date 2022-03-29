@@ -19,10 +19,6 @@
     align-content: center;
   }
 
-  nb-user {
-    cursor: pointer;
-  }
-
   ::ng-deep nb-search button {
     padding: 0!important;
   }
@@ -44,11 +40,12 @@
 
     .logo {
       padding: 0 1.25rem;
-      font-size: 1.75rem;
+      font-size: 2.25rem;
       @include nb-ltr(border-left, 1px solid nb-theme(divider-color));
       @include nb-rtl(border-right, 1px solid nb-theme(divider-color));
       white-space: nowrap;
       text-decoration: none;
+      font-weight: bold;
     }
   }
 
