@@ -1,0 +1,109 @@
+<div class="row justify-content-md-center">
+  <div class="col-md-10">
+    <nb-card>
+      <nb-card-header>Firma Digital de Archivos (DSS)</nb-card-header>
+      <nb-card-body>
+        <div class="row">
+          <div class="col align-self-start" style="display: flex;">
+            <div class="load-image-button-container">
+              <label for="file-selector" class="custom-file-upload">Cargar Archivo</label>
+              <input #fileSelector (change)="fileSelected($event, 'SIGN')" type="file" id="file-selector">
+            </div>
+          </div>
+          <div class="col align-self-end">
+            <div class="form-group col-md-10">
+              <label for="fileName" class="label">Nombre del Archivo:</label>
+              <input type="text" [(ngModel)]="model1.fileName" name="fileName" nbInput readonly fullWidth id="fileName">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-md-12">
+            <label for="sha" class="label">SHA256: </label>
+            <input type="text" [(ngModel)]="model1.sha" name="sha" nbInput fullWidth readonly id="sha" placeholder="SHA256 se generará cuando suba el archivo.">
+          </div>
+
+          <div class="col-md-6">
+            <form (ngSubmit)="signButton(model1.sha)">
+              <div class="buttons">
+                <button type="submit" nbButton status="primary">Firmar Archivo</button>
+                <!--<a #downloadAnchor1 class="custom-file-upload" download="imagen-cifrada" href=""
+                title="ImageName">Descargar Imagen</a>-->
+                <!--<button (click)="clearForm($event)" nbButton status="warning">Limpiar</button>-->
+              </div>
+            </form>
+          </div>
+        </div>
+        <br>
+        <div class="row">
+          <div class="form-group col-md-12">
+            <label for="signTextGen" class="label">Firma generada: </label>
+            <textarea type="text" [(ngModel)]="model1.fileSign" name="signTextGen" nbInput fullWidth readonly
+              id="signTextGen" placeholder="Oprima 'FIRMAR ARCHIVO' para ver la firma."></textarea>
+          </div>
+          <div class="form-group col-md-12">
+            <label for="keyGen" class="label">Llave generada: </label>
+            <textarea type="text" [(ngModel)]="model1.key" name="keyGen" nbInput fullWidth readonly
+              id="keyGen" placeholder="Oprima 'FIRMAR ARCHIVO' para ver la llave."></textarea>
+          </div>
+        </div>
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>
+
+<div class="row justify-content-md-center">
+  <div class="col-md-10">
+    <nb-card>
+      <nb-card-header>Verificación de Firma Digital de Archivos (DSS)</nb-card-header>
+      <nb-card-body>
+        <div class="row">
+          <div class="col align-self-start" style="display: flex;">
+            <div class="load-image-button-container">
+              <label for="file-selector2" class="custom-file-upload">Cargar Archivo</label>
+              <input #fileSelector2 (change)="fileSelected($event, 'VER')" type="file" id="file-selector2">
+            </div>
+          </div>
+          <div class="col align-self-end">
+            <div class="form-group col-md-10">
+              <label for="fileName" class="label">Nombre del Archivo:</label>
+              <input type="text" [(ngModel)]="model2.fileName" name="fileName2" nbInput readonly fullWidth id="fileName2">
+            </div>
+          </div>
+        </div>
+        <!--<div class="row">
+          <div class="form-group col-md-12">
+            <label for="sha2" class="label">SHA256: </label>
+            <input type="text" [(ngModel)]="model2.sha" name="sha2" nbInput fullWidth readonly id="sha2" placeholder="SHA">
+          </div>
+        </div>-->
+        <br>
+        <div class="row">
+          <div class="form-group col-md-12">
+            <label for="signText" class="label">Firma: </label>
+            <textarea type="text" [(ngModel)]="model2.fileSign" name="signText" nbInput fullWidth
+              id="signText" placeholder="Ingrese la firma. Use números separados por comas."></textarea>
+          </div>
+          <div class="form-group col-md-12">
+            <label for="key" class="label">Llave: </label>
+            <textarea type="text" [(ngModel)]="model2.key" name="key" nbInput fullWidth
+              id="key" placeholder="Ingrese la llave. Use números separados por comas."></textarea>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            <form (ngSubmit)="verifyButton(model2.sha, model2.key, model2.fileSign)">
+              <div class="buttons">
+                <button type="submit" nbButton status="primary">Verificar Firma</button>
+                <!--<a #downloadAnchor1 class="custom-file-upload" download="imagen-cifrada" href=""
+                title="ImageName">Descargar Imagen</a>-->
+                <!--<button (click)="clearForm($event)" nbButton status="warning">Limpiar</button>-->
+              </div>
+            </form>
+          </div>
+        </div>
+      </nb-card-body>
+    </nb-card>
+  </div>
+
+</div>

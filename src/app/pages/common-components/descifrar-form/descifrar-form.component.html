@@ -1,0 +1,42 @@
+<nb-card>
+  <nb-card-header>{{title}}</nb-card-header>
+  <nb-card-body>
+
+    <form (ngSubmit)="descifrar(model.textoCifrado, model.clave)">
+
+      <div class="form-group">
+        <label for="textoCifrado" class="label">Texto Cifrado</label>
+        <textarea type="text" [(ngModel)]="model.textoCifrado" name="textoCifrado" nbInput fullWidth id="textoCifrado" placeholder="Inserte el texto a descifrar"></textarea>
+      </div>
+
+      <div *ngIf="claveString" class="form-group">
+        <label for="clave3" class="label">Clave de cifrado</label>
+        <textarea type="text" [(ngModel)]="model.claveString" name="clave3" nbInput fullWidth id="clave3" placeholder="Ingrese clave de texto"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="textoClaro" class="label">Texto Claro</label>
+        <textarea type="text" [(ngModel)]="textoClaro" name="textoClaro" nbInput fullWidth id="textoClaro" placeholder="Oprima 'DESCIFRAR' para ver el texto descifrado"></textarea>
+      </div>
+      
+      <div class="row">
+        <div *ngIf="claveNumero || claveDoble" class="form-group col-md-3">
+          <label for="clave1" class="label">Clave de cifrado <span *ngIf="claveDoble">a</span> </label>
+          <input class="block" type="number" [(ngModel)]="model.clave[0]" name="clave1" nbInput id="clave1" min="0" max="25">
+        </div>
+
+        <div *ngIf="claveDoble" class="form-group col-md-3">
+          <label for="clave2" class="label">Clave de cifrado b </label>
+          <input class="block" type="number" [(ngModel)]="model.clave[1]" name="clave2" nbInput id="clave2" min="0" max="25">
+        </div>
+      </div>
+
+      <div class="buttons">
+        <button type="submit" nbButton status="primary">Descifrar</button>
+        <button (click)="clearForm($event)" nbButton  status="warning">Limpiar</button>
+      </div>
+      
+    </form>
+
+  </nb-card-body>
+</nb-card>

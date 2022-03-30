@@ -1,0 +1,57 @@
+@import "../../../@theme/styles/themes";
+
+@include nb-install-component() {
+  button[nbTreeGridRowToggle] {
+    background: transparent;
+    border: none;
+    padding: 0;
+  }
+
+  .search-label {
+    display: block;
+  }
+  .search-input {
+    margin-bottom: 1rem;
+  }
+
+  ::ng-deep .row-toggle-button {
+    color: nb-theme(text-basic-color);
+  }
+
+  .nb-tree-grid-header-cell,
+  .nb-tree-grid-header-cell button {
+    text-transform: capitalize;
+  }
+
+  .nb-column-clave {
+    width: 10%;
+  }
+  .nb-column-texto {
+    width: 90%;
+  }
+
+  .nb-column-n_grama {
+    width: 10%;
+  }
+  .nb-column-frecuencia {
+    width: 90%;
+  }
+
+  .nb-column-m {
+    width: 10%;
+  }
+  .nb-column-indices {
+    width: 90%;
+  }
+
+  .nb-column-monograma .nb-column-digrama .nb-column-trigrama {
+    width: 50%;
+  }
+  .nb-column-frecuencia {
+    width: 50%;
+  }
+
+  td {
+    overflow-wrap: break-word;
+  }
+}

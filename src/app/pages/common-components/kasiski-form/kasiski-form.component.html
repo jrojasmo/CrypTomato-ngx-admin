@@ -1,0 +1,28 @@
+
+<nb-card>
+  <nb-card-header>Kasiski Paso 1</nb-card-header>
+  <nb-card-body>
+    <form (ngSubmit)="kasiski(model.textoCifrado, model.tamanio)">
+      <div class="form-group">
+        <label for="textoCifrado" class="label">Texto Cifrado</label>
+        <textarea type="text" [(ngModel)]="model.textoCifrado" name="textoCifrado" nbInput fullWidth id="textoCifrado" placeholder="Inserte el texto cifrado y oprima 'OBTENER FRECUENCIAS'"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="tamanio" class="label">Tamaño de Palabra</label>
+        <input class="block" type="number" [(ngModel)]="model.tamanio" name="tamanio" nbInput id="tamanio" min="1">
+      </div>
+
+      <div class="buttons">
+        <button type="submit" nbButton status="primary">Obtener Frecuencias</button>
+        <button (click)="clearForm($event)" nbButton  status="warning">Limpiar</button>
+      </div>
+      
+    </form>
+    
+    <!--<div *ngIf="kasiskiFrecuencies.length > 0" class="table-container">
+      <ngx-tabla [data]="kasiskiFrecuencies" [inVigenere]="true" ></ngx-tabla>
+    </div>-->
+    
+  </nb-card-body>
+</nb-card>

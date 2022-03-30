@@ -1,0 +1,151 @@
+<div class="row">
+  <div class="col-md-8 offset-md-2">
+    <nb-card>
+      <nb-card-header>Generar claves de RSA</nb-card-header>
+      <nb-card-body>
+        <div class="col col-md-12">
+          <label class="label">Si no tiene una clave: haga click en 'Generar Clave', después presione 'Llenar
+            Campos' y podrá cifrar y descifrar en los respectivos recuadros con la clave generada.</label>
+        </div>
+        <br>
+        <div class="row justify-content-around">
+          <button class="col-4" (click)="generarClave($event, model3)" nbButton status="primary">Generar Clave</button>
+          <button class="col-4" (click)="fillKey($event, model3)" nbButton status="warning">Llenar Campos</button>
+        </div>
+        <br>
+        <div class="row">
+          <div class="col align-self-start">
+            <div class="form-group col-md-8">
+              <label for="numP" class="label">Primo p (privado):</label>
+              <input class="fix-width" type="number" [(ngModel)]="model3.numP" name="numP" nbInput id="numP" readonly>
+            </div>
+          </div>
+          <div class="col align-self-end">
+            <div class="form-group col-md-8">
+              <label for="numQ" class="label">Primo q (privado):</label>
+              <input class="fix-width" type="number" [(ngModel)]="model3.numQ" name="numQ" nbInput id="numQ" readonly>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col align-self-start">
+            <div class="form-group col-md-8">
+              <label for="numN" class="label">Número n (público):</label>
+              <input class="fix-width" type="number" [(ngModel)]="model3.numN" name="numN" nbInput id="numN" readonly>
+            </div>
+          </div>
+          <div class="col align-self-end">
+            <div class="form-group col-md-8">
+              <label for="numB" class="label">Número b (público):</label>
+              <input class="fix-width" type="number" [(ngModel)]="model3.numB" name="numB" nbInput id="numB" readonly>
+            </div>
+          </div>
+        </div>
+
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-6">
+    <nb-card>
+      <nb-card-header>Cifrar con RSA</nb-card-header>
+      <nb-card-body>
+
+        <form (ngSubmit)="cifrar(model1.textoClaro, model1.numN, model1.numB)">
+
+          <div class="form-group">
+            <label for="textoClaro" class="label">Texto Claro</label>
+            <textarea type="text" [(ngModel)]="model1.textoClaro" name="textoClaro" nbInput fullWidth id="textoClaro"
+              placeholder="Inserte el texto a cifrar. Use caracteres del alfabeto inglés."></textarea>
+          </div>
+          <div class="row">
+            <div class="col align-self-start">
+              <div class="form-group col-md-6">
+                <label for="numN" class="label">Número n:</label>
+                <input class="fix-width" type="number" [(ngModel)]="model1.numN" name="numNC" nbInput id="numNC"
+                  placeholder="Ingrese n">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col align-self-end">
+              <div class="form-group col-md-6">
+                <label for="numB" class="label">Número b:</label>
+                <input class="fix-width" type="number" [(ngModel)]="model1.numB" name="numBC" nbInput id="numBC"
+                  placeholder="Ingrese b">
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="textoCifrado" class="label">Texto Cifrado</label>
+            <textarea type="text" [(ngModel)]="model1.textoCifrado" name="textoCifrado" nbInput fullWidth
+              id="textoCifrado" placeholder="Oprima 'CIFRAR' para ver el texto cifrado"></textarea>
+          </div>
+
+          <div class="buttons">
+            <button type="submit" nbButton status="primary">Cifrar</button>
+            <button (click)="clearForm1($event, model1)" nbButton status="warning">Limpiar</button>
+          </div>
+
+        </form>
+
+      </nb-card-body>
+    </nb-card>
+  </div>
+
+  <div class="col-md-6">
+    <nb-card>
+      <nb-card-header>Descifrar con RSA</nb-card-header>
+      <nb-card-body>
+
+        <form (ngSubmit)="descifrar(model2.textoCifrado, model2.numP, model2.numQ, model2.numB)">
+
+          <div class="form-group">
+            <label for="textoCifrado" class="label">Texto Cifrado</label>
+            <textarea type="text" [(ngModel)]="model2.textoCifrado" name="textoCifrado" nbInput fullWidth
+              id="textoCifrado" placeholder="Inserte el texto a descifrar. Use números separados por comas."></textarea>
+          </div>
+          <div class="row">
+            <div class="col align-self-start">
+              <div class="form-group col-md-12">
+                <label for="numP" class="label">Primo p:</label>
+                <input class="form-control" type="number" [(ngModel)]="model2.numP" name="numPD" nbInput id="numPD"
+                  placeholder="Ingrese p">
+              </div>
+            </div>
+            <div class="col align-self-end">
+              <div class="form-group col-md-12">
+                <label for="numQ" class="label">Primo q:</label>
+                <input class="form-control" type="number" [(ngModel)]="model2.numQ" name="numQD" nbInput id="numQD"
+                  placeholder="Ingrese q">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col align-self-start">
+              <div class="form-group col-md-6">
+                <label for="numB" class="label">Número b:</label>
+                <input class="fix-width" type="number" [(ngModel)]="model2.numB" name="numBD" nbInput id="numBD"
+                  placeholder="Ingrese b">
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="textoClaro" class="label">Texto Claro</label>
+            <textarea type="text" [(ngModel)]="model2.textoClaro" name="textoClaro" nbInput fullWidth id="textoClaro"
+              placeholder="Oprima 'DESCIFRAR' para ver el texto descifrado"></textarea>
+          </div>
+
+          <div class="buttons">
+            <button type="submit" nbButton status="primary">Descifrar</button>
+            <button (click)="clearForm2($event, model2)" nbButton status="warning">Limpiar</button>
+          </div>
+
+        </form>
+
+      </nb-card-body>
+    </nb-card>
+  </div>
+
+</div>

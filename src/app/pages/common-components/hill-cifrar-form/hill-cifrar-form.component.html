@@ -1,0 +1,43 @@
+<nb-card>
+  <nb-card-header>{{title}}</nb-card-header>
+  <nb-card-body>
+
+    <form (ngSubmit)="cifrar()">
+
+      <div class="form-group">
+        <label for="linkImagenClara" class="label">Link Imagen Clara</label>
+        <textarea type="text" [(ngModel)]="model.linkImagenClara" name="linkImagenClara" nbInput fullWidth id="linkImagenClara" placeholder="Inserte el link de la imagen a cifrar"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="imagenCifrada" class="label">Imagen Cifrada</label>
+        <input type="image" src="img_submit.gif" alt="Submit" name="imagenCifrada" id="imagenCifrada" width="48" height="48">
+      </div>
+
+      <div class="form-group">
+        <label for="clave1" class="label">Clave de cifrado 1</label>
+        <input class="block" type="number" [(ngModel)]="model.clave[0]" name="clave1" nbInput id="clave1" min="0">
+      </div>
+
+      <div class="form-group">
+        <label for="clave2" class="label">Clave de cifrado 2</label>
+        <input class="block" type="number" [(ngModel)]="model.clave[1]" name="clave2" nbInput id="clave2" min="0">
+      </div>
+      <div class="form-group">
+        <label for="clave3" class="label">Clave de cifrado 3</label>
+        <input class="block" type="number" [(ngModel)]="model.clave[2]" name="clave3" nbInput id="clave3" min="0">
+      </div>
+      <div class="form-group">
+        <label for="clave4" class="label">Clave de cifrado 4</label>
+        <input class="block" type="number" [(ngModel)]="model.clave[3]" name="clave4" nbInput id="clave4" min="0">
+      </div>
+
+      <div class="buttons">
+        <button type="submit" nbButton status="primary">Cifrar</button>
+        <button (click)="clearForm($event)" nbButton  status="warning">Limpiar</button>
+      </div>
+      
+    </form>
+
+  </nb-card-body>
+</nb-card>

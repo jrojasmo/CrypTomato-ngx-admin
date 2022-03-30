@@ -1,0 +1,23 @@
+
+<nb-card>
+  <nb-card-header>{{title}}</nb-card-header>
+  <nb-card-body>
+    <form (ngSubmit)="analizar(model.textoCifrado)">
+      <div class="form-group">
+        <label for="textoCifrado" class="label">Texto Cifrado</label>
+        <textarea type="text" [(ngModel)]="model.textoCifrado" name="textoCifrado" nbInput fullWidth id="textoCifrado" placeholder="Inserte el texto cifrado y oprima 'ANALIZAR'"></textarea>
+      </div>
+
+      <div class="buttons">
+        <button type="submit" nbButton status="primary">Analizar</button>
+        <button (click)="clearForm($event)" nbButton  status="warning">Limpiar</button>
+      </div>
+      
+    </form>
+    
+    <div *ngIf="analisis.length > 0" class="table-container">
+      <ngx-tabla [data]="analisis" ></ngx-tabla>
+    </div>
+    
+  </nb-card-body>
+</nb-card>
