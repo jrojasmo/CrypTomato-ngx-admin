@@ -1,28 +1,28 @@
 <div class="row">
   <div class="col-md-8 offset-md-2">
     <nb-card>
-      <nb-card-header>Generar claves de Criptosistema Rabin</nb-card-header>
+      <nb-card-header>Generate Rabin Cryptosystem Keys</nb-card-header>
       <nb-card-body>
         <div class="col col-md-12">
-          <label class="label">Si no tiene una clave: haga click en 'Generar Clave', después presione 'Llenar
-            Campos' y podrá cifrar y descifrar en los respectivos recuadros con la clave generada.</label>
+          <label class="label">If you do not have a key: click on 'Generate Key', then click on 'Fill Fields' and you
+            will be able to encrypt and decrypt in the respective boxes with the generated key.</label>
         </div>
         <br>
         <div class="row justify-content-around">
-          <button class="col-4" (click)="generarClave($event, model3)" nbButton status="primary">Generar Clave</button>
-          <button class="col-4" (click)="fillKey($event, model3)" nbButton status="warning">Llenar Campos</button>
+          <button class="col-4" (click)="generarClave($event, model3)" nbButton status="primary">Generate Key</button>
+          <button class="col-4" (click)="fillKey($event, model3)" nbButton status="success">Fill Fields</button>
         </div>
         <br>
         <div class="row">
           <div class="col align-self-start">
             <div class="form-group col-md-8">
-              <label for="numP" class="label">Primo p (privado):</label>
+              <label for="numP" class="label">Prime p (private):</label>
               <input class="fix-width" type="number" [(ngModel)]="model3.numP" name="numP" nbInput id="numP" readonly>
             </div>
           </div>
           <div class="col align-self-end">
             <div class="form-group col-md-8">
-              <label for="numQ" class="label">Primo q (privado):</label>
+              <label for="numQ" class="label">Prime q (private):</label>
               <input class="fix-width" type="number" [(ngModel)]="model3.numQ" name="numQ" nbInput id="numQ" readonly>
             </div>
           </div>
@@ -30,13 +30,13 @@
         <div class="row">
           <div class="col align-self-start">
             <div class="form-group col-md-8">
-              <label for="numN" class="label">Número n (público):</label>
+              <label for="numN" class="label">Number n (public):</label>
               <input class="fix-width" type="number" [(ngModel)]="model3.numN" name="numN" nbInput id="numN" readonly>
             </div>
           </div>
           <div class="col align-self-end">
             <div class="form-group col-md-8">
-              <label for="numB" class="label">Número b (público):</label>
+              <label for="numB" class="label">Number b (public):</label>
               <input class="fix-width" type="number" [(ngModel)]="model3.numB" name="numB" nbInput id="numB" readonly>
             </div>
           </div>
@@ -49,43 +49,43 @@
 <div class="row">
   <div class="col-md-6">
     <nb-card>
-      <nb-card-header>Cifrar con Criptosistema Rabin</nb-card-header>
+      <nb-card-header>Encrypt with Rabin Cryptosystem</nb-card-header>
       <nb-card-body>
 
         <form (ngSubmit)="cifrar(model1.textoClaro, model1.numN, model1.numB)">
 
           <div class="form-group">
-            <label for="textoClaro" class="label">Texto Claro</label>
+            <label for="textoClaro" class="label">Plaintext</label>
             <textarea type="text" [(ngModel)]="model1.textoClaro" name="textoClaro" nbInput fullWidth id="textoClaro"
-              placeholder="Inserte el texto a cifrar. Use caracteres del alfabeto inglés."></textarea>
+              placeholder="Insert the text to be encrypted. Use English alphabet characters."></textarea>
           </div>
           <div class="row">
             <div class="col align-self-start">
               <div class="form-group col-md-6">
-                <label for="numN" class="label">Número n:</label>
+                <label for="numN" class="label">Number n:</label>
                 <input class="fix-width" type="number" [(ngModel)]="model1.numN" name="numNC" nbInput id="numNC"
-                  placeholder="Ingrese n">
+                  placeholder="Enter n">
               </div>
             </div>
           </div>
           <div class="row">
             <div class="col align-self-end">
               <div class="form-group col-md-6">
-                <label for="numB" class="label">Número b:</label>
+                <label for="numB" class="label">Number b:</label>
                 <input class="fix-width" type="number" [(ngModel)]="model1.numB" name="numBC" nbInput id="numBC"
-                  placeholder="Ingrese b">
+                  placeholder="Enter b">
               </div>
             </div>
           </div>
           <div class="form-group">
-            <label for="textoCifrado" class="label">Texto Cifrado</label>
+            <label for="textoCifrado" class="label">Ciphertext</label>
             <textarea type="text" [(ngModel)]="model1.textoCifrado" name="textoCifrado" nbInput fullWidth
-              id="textoCifrado" placeholder="Oprima 'CIFRAR' para ver el texto cifrado"></textarea>
+              id="textoCifrado" placeholder="Click on 'ENCRYPT' to view the ciphertext"></textarea>
           </div>
 
           <div class="buttons">
-            <button type="submit" nbButton status="primary">Cifrar</button>
-            <button (click)="clearForm1($event, model1)" nbButton status="warning">Limpiar</button>
+            <button type="submit" nbButton status="primary">Encrypt</button>
+            <button (click)="clearForm1($event, model1)" nbButton status="warning">Clean up</button>
           </div>
 
         </form>
@@ -96,50 +96,51 @@
 
   <div class="col-md-6">
     <nb-card>
-      <nb-card-header>Descifrar con Criptosistema Rabin</nb-card-header>
+      <nb-card-header>Decryption with Rabin Cryptosystem</nb-card-header>
       <nb-card-body>
 
         <form (ngSubmit)="descifrar(model2.textoCifrado, model2.numP, model2.numQ, model2.numB)">
 
           <div class="form-group">
-            <label for="textoCifrado" class="label">Texto Cifrado</label>
+            <label for="textoCifrado" class="label">Ciphertext</label>
             <textarea type="text" [(ngModel)]="model2.textoCifrado" name="textoCifrado" nbInput fullWidth
-              id="textoCifrado" placeholder="Inserte el texto a descifrar. Use números separados por comas."></textarea>
+              id="textoCifrado"
+              placeholder="Insert the text to be decrypted. Use the characters A-Z, a-z, 0-9, + or /."></textarea>
           </div>
           <div class="row">
             <div class="col align-self-start">
               <div class="form-group col-md-12">
-                <label for="numP" class="label">Primo p:</label>
+                <label for="numP" class="label">Prime p:</label>
                 <input class="form-control" type="number" [(ngModel)]="model2.numP" name="numPD" nbInput id="numPD"
-                  placeholder="Ingrese p">
+                  placeholder="Enter p">
               </div>
             </div>
             <div class="col align-self-end">
               <div class="form-group col-md-12">
-                <label for="numQ" class="label">Primo q:</label>
+                <label for="numQ" class="label">Prime q:</label>
                 <input class="form-control" type="number" [(ngModel)]="model2.numQ" name="numQD" nbInput id="numQD"
-                  placeholder="Ingrese q">
+                  placeholder="Enter q">
               </div>
             </div>
           </div>
           <div class="row">
             <div class="col align-self-start">
               <div class="form-group col-md-6">
-                <label for="numB" class="label">Número b:</label>
+                <label for="numB" class="label">Number b:</label>
                 <input class="fix-width" type="number" [(ngModel)]="model2.numB" name="numBD" nbInput id="numBD"
-                  placeholder="Ingrese b">
+                  placeholder="Enter b">
               </div>
             </div>
           </div>
           <div class="form-group">
-            <label for="textoClaro" class="label">Texto Claro</label>
+            <label for="textoClaro" class="label">Plaintext</label>
             <textarea type="text" [(ngModel)]="model2.textoClaro" name="textoClaro" nbInput fullWidth id="textoClaro"
-              placeholder="Oprima 'DESCIFRAR' para ver el texto descifrado"></textarea>
+              placeholder="Click on 'DECRYPT' to view the decoded text"></textarea>
           </div>
 
           <div class="buttons">
-            <button type="submit" nbButton status="primary">Descifrar</button>
-            <button (click)="clearForm2($event, model2)" nbButton status="warning">Limpiar</button>
+            <button type="submit" nbButton status="primary">Decrypt</button>
+            <button (click)="clearForm2($event, model2)" nbButton status="warning">Clean up</button>
           </div>
 
         </form>

@@ -46,14 +46,16 @@ export class RsaComponent {
   primeArray = [];
   primeNumber = 0;
   alphSize = 0;
-  asciiCodeOfA = 0;
+  minValueN = 0;
+  blockSize = 0;
 
   constructor(private dialogService: NbDialogService, private util: TextUtilService) {
+    this.blockSize = 3;
+    this.minValueN = 18279;
     this.maxNumber = 11000;
     this.primeArray = this.sieveOfEratosthenes(this.maxNumber);
     this.primeNumber = this.primeArray.length;
     this.alphSize = 26;
-    this.asciiCodeOfA = 97;
   }
 
   matchExact(str, r) {
@@ -64,7 +66,7 @@ export class RsaComponent {
 
   cifrar(textoClaro, n, b) {
     //textoClaro = this.util.normalizeInput(textoClaro);
-    if(!n || !b){
+    if (!n || !b || n < this.minValueN) {
       this.showClaveIncorrecta();
       return;
     }
@@ -72,28 +74,23 @@ export class RsaComponent {
   }
 
   descifrar(textoCifrado, p, q, b) {
-    if(!p || !q || !b){
+    if (!p || !q || !b || p*q < this.minValueN || textoCifrado.length%5!=0) {
       this.showClaveIncorrecta();
       return;
     }
-    var re2 = /[0-9,]+/g;
+    var re2 = /[A-Za-z0-9+/]+/;
     textoCifrado = textoCifrado.replace(/(\r\n|\n|\r| )/gm, "");
     if (!this.matchExact(textoCifrado, re2)) {
       this.showTextoIncorrecto();
       return;
     }
-    var arrCiph = [];
-    var aux = textoCifrado.split(',');
-    for (var i = 0; i < aux.length; i++) {
-      arrCiph.push(parseInt(aux[i], 10));
-    }
     var intP = parseInt(p, 10);
     var intQ = parseInt(q, 10);
-    if(intP > this.maxNumber || intQ > this.maxNumber){
+    if (intP > this.maxNumber || intQ > this.maxNumber) {
       this.showPrimosIncorrectos();
       return;
     }
-    this.model2.textoClaro = this.decipherRSA(arrCiph, parseInt(b, 10), intP, intQ);
+    this.model2.textoClaro = this.decipherRSA(textoCifrado, parseInt(b, 10), intP, intQ);
     //this.model2.textoClaro = "AAAAAA";
   }
 
@@ -135,17 +132,8 @@ export class RsaComponent {
   showClaveIncorrecta() {
     this.dialogService.open(DialogoComponent, {
       context: {
-        title: 'Clave Incorrecta',
-        content: 'Hay parámetros vacíos.'
-      },
-    });
-  }
-
-  showIncorrectaTotient() {
-    this.dialogService.open(DialogoComponent, {
-      context: {
-        title: 'Clave Incorrecta',
-        content: 'El número b ingresado no es correcto: Recuerde que GCD(b, Totient(n))=1.'
+        title: 'Key Error!',
+        content: 'There are empty or invalid parameters. (n >=' + this.minValueN + ' to encrypt or the text to be decrypted is not divisible by five)'
       },
     });
   }
@@ -153,8 +141,8 @@ export class RsaComponent {
   showTextoIncorrecto() {
     this.dialogService.open(DialogoComponent, {
       context: {
-        title: 'Texto Incorrecto',
-        content: 'El texto cifrado son números separados por comas.'
+        title: 'Texto Error!',
+        content: 'The ciphertext must have only base 64 digits (a-z, A-Z, 0-9, +, /).'
       },
     });
   }
@@ -162,8 +150,8 @@ export class RsaComponent {
   showPrimosIncorrectos() {
     this.dialogService.open(DialogoComponent, {
       context: {
-        title: 'Clave Incorrecto',
-        content: 'Los números primos p y q deben ser menores a ' + this.maxNumber
+        title: 'Key Error!',
+        content: 'The prime numbers p and q must be less than ' + this.maxNumber
       },
     });
   }
@@ -210,9 +198,89 @@ export class RsaComponent {
     }
     return array;
   }
+  tupleToBase26(array) {
+    var pow = 1;
+    var num = 0;
+    for (var i = array.length - 1; i >= 0; --i) {
+      num += pow * array[i];
+      pow *= 26;
+    }
+    return num;
+  }
+
+  base26ToTriple(num) {
+    var array = [];
+    array.push(num % 26);
+    num -= num % 26;
+    num /= 26;
+    array.push(num % 26);
+    num -= num % 26;
+    num /= 26;
+    array.push(num);
+    return array.reverse();
+  }
+  //Base64 code
+  Base64 = {
+    _Rixits: "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz+/",
+    fromNumber: function (number) {
+      if (
+        isNaN(Number(number)) ||
+        number === null ||
+        number === Number.POSITIVE_INFINITY
+      )
+        throw "The input is not valid";
+      if (number < 0) throw "Can't represent negative numbers now";
+
+      var rixit; // like 'digit', only in some non-decimal radix
+      var residual = Math.floor(number);
+      var result = "";
+      while (true) {
+        rixit = residual % 64;
+        // console.log("rixit : " + rixit);
+        // console.log("result before : " + result);
+        result = this._Rixits.charAt(rixit) + result;
+        // console.log("result after : " + result);
+        // console.log("residual before : " + residual);
+        residual = Math.floor(residual / 64);
+        // console.log("residual after : " + residual);
+
+        if (residual == 0) break;
+      }
+      return result;
+    },
+
+    toNumber: function (rixits) {
+      var result = 0;
+      // console.log("rixits : " + rixits);
+      // console.log("rixits.split('') : " + rixits.split(''));
+      rixits = rixits.split("");
+      for (var e = 0; e < rixits.length; e++) {
+        // console.log("_Rixits.indexOf(" + rixits[e] + ") : " +
+        // this._Rixits.indexOf(rixits[e]));
+        // console.log("result before : " + result);
+        result = result * 64 + this._Rixits.indexOf(rixits[e]);
+        // console.log("result after : " + result);
+      }
+      return result;
+    },
+  };
+
   cipherRSA(clearText, n, b) {
     var text = this.util.normalizeInput(clearText);
-    var cipheredText = [];
+    if (text.length % this.blockSize != 0) {
+      var mod = this.blockSize - (text.length % this.blockSize);
+      while (mod > 0) {
+        text += "x";
+        mod--;
+      }
+    }
+    var cipheredText = "";
+
+    if (n < this.minValueN) {
+      console.log("n debe ser mayor o igual a 18279 para poder cifrar");
+      return cipheredText;
+    }
+
     const dict = {
       a: 0,
       b: 1,
@@ -241,13 +309,27 @@ export class RsaComponent {
       y: 24,
       z: 25,
     };
-    for (var i = 0; i < text.length; ++i) {
-      var number = this.power(dict[text[i]] + this.asciiCodeOfA, b, n);
-      cipheredText.push(number);
+
+    for (var i = 0; i < text.length / 3; ++i) {
+      var array = [];
+      array.push(dict[text[i * 3]]);
+      array.push(dict[text[i * 3 + 1]]);
+      array.push(dict[text[i * 3 + 2]]);
+      var number = this.power(this.tupleToBase26(array), b, n);
+      //console.log(number);
+      var toPush = this.Base64.fromNumber(number);
+      //console.log(toPush);
+      if (toPush.length < 5) {
+        var need = 5 - toPush.length;
+        for (var j = 0; j < need; ++j) {
+          cipheredText += "0";
+        }
+      }
+      cipheredText += toPush;
     }
     return cipheredText;
   }
-  decipherRSA(array, b, p, q) {
+  decipherRSA(text, b, p, q) {
     var pair = new Pair(0, 0);
     var n = p * q;
     var totient = (p - 1) * (q - 1);
@@ -257,25 +339,52 @@ export class RsaComponent {
       a += totient;
       a %= totient;
     }
-    if(a*b % totient != 1){
-      this.showIncorrectaTotient();
-      return '';
-    }
     var clearText = "";
+    var array = [];
+    const dict1 = {
+      0: "a",
+      1: "b",
+      2: "c",
+      3: "d",
+      4: "e",
+      5: "f",
+      6: "g",
+      7: "h",
+      8: "i",
+      9: "j",
+      10: "k",
+      11: "l",
+      12: "m",
+      13: "n",
+      14: "o",
+      15: "p",
+      16: "q",
+      17: "r",
+      18: "s",
+      19: "t",
+      20: "u",
+      21: "v",
+      22: "w",
+      23: "x",
+      24: "y",
+      25: "z",
+    };
+    for (var i = 0; i < text.length / 5; ++i) {
+      array.push(this.Base64.toNumber(text.substring(5 * i, 5 * i + 5)));
+    }
     for (var i = 0; i < array.length; ++i) {
-      var num = (this.power(array[i], a, n) - this.asciiCodeOfA) % 26;
-      while (num < 0) {
-        num += 26;
-        num %= 26;
-      }
-      clearText += this.util.codesToString([num]);
+      var num = this.power(array[i], a, n);
+      var arr = this.base26ToTriple(num);
+      clearText += dict1[arr[0]];
+      clearText += dict1[arr[1]];
+      clearText += dict1[arr[2]];
     }
     return clearText;
   }
 
   generateKey() {
     var p, q;
-    var minPrime = 100;
+    var minPrime = 60;
     p = Math.floor(Math.random() * this.primeNumber);
     while (p <= minPrime) {
       p = Math.floor(Math.random() * this.primeNumber);
