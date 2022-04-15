@@ -8,7 +8,7 @@ import { Component } from '@angular/core';
      CrypTomat🍅 - Universidad Nacional de Colombia. <br> Original design template <b><a href="https://akveo.github.io/ngx-admin/" target="_blank">ngx-admin</a></b>.
     </span>
     <div class="socials">
-      <a href="https://github.com/jrojasmo/CryptoTools" target="_blank" class="ion ion-social-github"></a>
+      <a href="https://github.com/agfernandezb/CrypTomato" target="_blank" class="ion ion-social-github"></a>
     </div>
   `,
 })

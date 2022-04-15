@@ -19,9 +19,10 @@ import { CommonComponentsModule } from '../common-components/common-components.m
 import { PublicaComponent } from './publica.component';
 import { PublicaRoutingModule } from './publica-routing.module';
 import { RsaComponent } from './rsa/rsa.component';
-import { ElGamalComponent } from './elgamal/elgamal.component';
+import { ElGamalMVComponent } from './elgamalMV/elgamalMV.component';
 import { FirmaComponent } from './firma/firma.component';
 import { RabinComponent } from './rabin/rabin.component';
+import { ElGamalComponent } from './elgamal/elgamal.component';
 
 @NgModule({
   imports: [
@@ -45,6 +46,7 @@ import { RabinComponent } from './rabin/rabin.component';
   declarations: [
     PublicaComponent,
     RsaComponent,
+    ElGamalMVComponent,
     ElGamalComponent,
     FirmaComponent,
     RabinComponent

@@ -9,23 +9,30 @@ export const MENU_ITEMS: NbMenuItem[] = [
   },
   {
     title: 'PUBLIC KEY',
-    group: true,
-    icon: 'star'
-  },
-  {
-    title: 'RSA',
-    link: '/pages/publica/rsa',
-    icon: 'unlock',
-  },
-  {
-    title: 'Rabin',
-    link: '/pages/publica/rabin',
-    icon: 'unlock'
-  },
-  {
-    title: 'ElGamal (M-V)',
-    link: '/pages/publica/elgamal',
-    icon: 'unlock'
+    icon: 'star',
+    expanded: true,
+    children: [
+      {
+        title: 'RSA',
+        link: '/pages/publica/rsa',
+        icon: 'unlock',
+      },
+      {
+        title: 'Rabin',
+        link: '/pages/publica/rabin',
+        icon: 'unlock'
+      },
+      {
+        title: 'ElGamal',
+        link: '/pages/publica/elgamal',
+        icon: 'unlock'
+      },
+      {
+        title: 'Menezes-Vanstone',
+        link: '/pages/publica/elgamalMV',
+        icon: 'unlock'
+      }
+    ]
   },
   {
     title: 'Digital Sign (DSS)',
@@ -35,6 +42,7 @@ export const MENU_ITEMS: NbMenuItem[] = [
   {
     title: 'Tables & Data',
     icon: 'grid-outline',
+    hidden: true,
     children: [
       {
         title: 'Smart Table',
@@ -49,6 +57,7 @@ export const MENU_ITEMS: NbMenuItem[] = [
   {
     title: 'Miscellaneous',
     icon: 'shuffle-2-outline',
+    hidden: true,
     children: [
       {
         title: '404',

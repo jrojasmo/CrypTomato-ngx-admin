@@ -17,7 +17,7 @@
           <div class="col align-self-start">
             <div class="form-group col-md-8">
               <label for="numP" class="label">Prime p (private):</label>
-              <input class="fix-width" type="number" [(ngModel)]="model3.numP" name="numP" nbInput id="numP" readonly>
+              <input class="fix-width" type="number" [(ngModel)]="model3.numP" name="numP" nbInput id="numP" readonly placeholder="Click on 'GENERATE KEY'">
             </div>
           </div>
           <div class="col align-self-end">
@@ -56,7 +56,7 @@
 
           <div class="form-group">
             <label for="textoClaro" class="label">Plaintext</label>
-            <textarea type="text" [(ngModel)]="model1.textoClaro" name="textoClaro" nbInput fullWidth id="textoClaro"
+            <textarea rows="4" type="text" [(ngModel)]="model1.textoClaro" name="textoClaro" nbInput fullWidth id="textoClaro"
               placeholder="Insert the text to be encrypted. Use English alphabet characters."></textarea>
           </div>
           <div class="row">
@@ -79,8 +79,8 @@
           </div>
           <div class="form-group">
             <label for="textoCifrado" class="label">Ciphertext</label>
-            <textarea type="text" [(ngModel)]="model1.textoCifrado" name="textoCifrado" nbInput fullWidth
-              id="textoCifrado" placeholder="Click on 'ENCRYPT' to view the ciphertext"></textarea>
+            <textarea rows="4" type="text" [(ngModel)]="model1.textoCifrado" name="textoCifrado" nbInput fullWidth
+              id="textoCifrado" placeholder="Click on 'ENCRYPT' to view the ciphertext" readonly></textarea>
           </div>
 
           <div class="buttons">
@@ -103,7 +103,7 @@
 
           <div class="form-group">
             <label for="textoCifrado" class="label">Ciphertext</label>
-            <textarea type="text" [(ngModel)]="model2.textoCifrado" name="textoCifrado" nbInput fullWidth
+            <textarea rows="4" type="text" [(ngModel)]="model2.textoCifrado" name="textoCifrado" nbInput fullWidth
               id="textoCifrado"
               placeholder="Insert the text to be decrypted. Use the characters A-Z, a-z, 0-9, + or /."></textarea>
           </div>
@@ -134,8 +134,8 @@
           </div>
           <div class="form-group">
             <label for="textoClaro" class="label">Plaintext</label>
-            <textarea type="text" [(ngModel)]="model2.textoClaro" name="textoClaro" nbInput fullWidth id="textoClaro"
-              placeholder="Click on 'DECRYPT' to view the decoded text"></textarea>
+            <textarea rows="4" type="text" [(ngModel)]="model2.textoClaro" name="textoClaro" nbInput fullWidth id="textoClaro"
+              placeholder="Click on 'DECRYPT' to view the decoded text" readonly></textarea>
           </div>
 
           <div class="buttons">

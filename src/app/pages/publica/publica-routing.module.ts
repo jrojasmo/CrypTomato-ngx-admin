@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { ElGamalComponent } from './elgamal/elgamal.component';
+import { ElGamalMVComponent } from './elgamalMV/elgamalMV.component';
 import { FirmaComponent } from './firma/firma.component';
 import { PublicaComponent } from './publica.component';
 import { RabinComponent } from './rabin/rabin.component';
@@ -15,6 +16,10 @@ const routes: Routes = [{
     {
       path: 'rsa',
       component: RsaComponent,
+    },
+    {
+      path: 'elgamalMV',
+      component: ElGamalMVComponent,
     },
     {
       path: 'elgamal',

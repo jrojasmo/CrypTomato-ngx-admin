@@ -1,0 +1,109 @@
+<div class="row">
+  <div class="col-md-8 offset-md-2">
+    <nb-card>
+      <nb-card-header> Generate keys of Menezes - Vanstone</nb-card-header>
+      <nb-card-body>
+        <div class="col col-md-12">
+          <label class="label">If you do not have a key: click on 'Generate Key', then click on 'Fill Fields' and you
+            will be able to encrypt and decrypt in the respective boxes with the generated key.</label>
+        </div>
+        <br>
+        <div class="row justify-content-around">
+          <button class="col-4" (click)="generarClave($event, model3)" nbButton status="primary">Generate key</button>
+          <button class="col-4" (click)="fillKey($event, model3)" nbButton status="success">Fill Fields</button>
+        </div>
+        <br>
+      
+        <div class="row">
+          <div class="col align-self-start">
+            <div class="form-group col-md-8">
+              <label for="numP" class="label">Beta point (public):</label>
+              <input class="fix-width" type="text" [(ngModel)]="model3.numP" name="numP" nbInput id="numP" readonly placeholder="Click on 'GENERATE KEY'">
+            </div>
+          </div>
+          <div class="col align-self-start">
+            <div class="form-group col-md-8">
+              <label for="numB" class="label">Number a (private):</label> <br>
+              <input class="fix-width" type="number" [(ngModel)]="model3.numB" name="numB" nbInput id="numB" readonly>
+            </div>
+          </div>
+        </div>
+
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-6">
+    <nb-card>
+      <nb-card-header>Encrypt with Menezes - Vanstone</nb-card-header>
+      <nb-card-body>
+
+        <form (ngSubmit)="cifrar(model1.textoClaro, model1.numP)">
+
+          <div class="form-group">
+            <label for="textoClaro" class="label">Plaintext</label>
+            <textarea rows="4" type="text" [(ngModel)]="model1.textoClaro" name="textoClaro" nbInput fullWidth id="textoClaro"
+              placeholder="Insert the text to be encrypted. Use English alphabet characters."></textarea>
+          </div>
+          <div class="row">
+            <div class="col align-self-start">
+              <div class="form-group col-md-8">
+                <label for="numP" class="label">Beta point (public):</label>
+                <input class="fix-width" type="text" [(ngModel)]="model1.numP" name="numPC" nbInput id="numPC" placeholder="Enter beta">
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="textoCifradoC" class="label">Ciphertext</label>
+            <textarea rows="4" type="text" [(ngModel)]="model1.textoCifrado" name="textoCifradoC" nbInput fullWidth
+              id="textoCifradoC" placeholder="Click on 'ENCRYPT' to view the ciphertext" readonly></textarea>
+          </div>
+
+          <div class="buttons">
+            <button type="submit" nbButton status="primary">Encrypt</button>
+            <button (click)="clearForm1($event, model1)" nbButton status="warning">Clean up</button>
+          </div>
+
+        </form>
+
+      </nb-card-body>
+    </nb-card>
+  </div>
+
+  <div class="col-md-6">
+    <nb-card>
+      <nb-card-header>Decrypt with Menezes - Vanstone</nb-card-header>
+      <nb-card-body>
+
+        <form (ngSubmit)="descifrar(model2.textoCifrado, model2.numB)">
+
+          <div class="form-group">
+            <label for="textoCifrado" class="label">Ciphertext</label>
+            <textarea rows="4" type="text" [(ngModel)]="model2.textoCifrado" name="textoCifrado" nbInput fullWidth
+              id="textoCifrado" placeholder="Insert the text to be decrypted. Use numbers separated by commas."></textarea>
+          </div>
+          <div class="row">
+            <div class="col align-self-start">
+              <div class="form-group col-md-8">
+                <label for="numB" class="label">Number a (private):</label> <br>
+                <input class="fix-width" type="number" [(ngModel)]="model2.numB" name="numBD" nbInput id="numBD" placeholder="Enter a">
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="textoClaroD" class="label">Plaintext</label>
+            <textarea rows="4" type="text" [(ngModel)]="model2.textoClaro" name="textoClaroD" nbInput fullWidth id="textoClaroD"
+              placeholder="Click on 'DECRYPT' to view the decoded text" readonly></textarea>
+          </div>
+
+          <div class="buttons">
+            <button type="submit" nbButton status="primary">Decrypt</button>
+            <button (click)="clearForm1($event, model2)" nbButton status="warning">Clean up</button>
+          </div>
+        </form>
+      </nb-card-body>
+    </nb-card>
+  </div>
+
+</div>
