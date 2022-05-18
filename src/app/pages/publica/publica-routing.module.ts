@@ -2,7 +2,8 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { ElGamalComponent } from './elgamal/elgamal.component';
 import { ElGamalMVComponent } from './elgamalMV/elgamalMV.component';
-import { FirmaComponent } from './firma/firma.component';
+import { FirmaElGamalComponent } from './firmaElGammal/firmaelgamal.component';
+import { FirmaRSAComponent } from './firmaRSA/firmarsa.component';
 import { PublicaComponent } from './publica.component';
 import { RabinComponent } from './rabin/rabin.component';
 import { RsaComponent } from './rsa/rsa.component';
@@ -30,8 +31,12 @@ const routes: Routes = [{
       component: RabinComponent,
     },
     {
-      path: 'firma',
-      component: FirmaComponent,
+      path: 'elGammalSign',
+      component: FirmaElGamalComponent,
+    },
+    {
+      path: 'RSASign',
+      component: FirmaRSAComponent,
     }
   ],
 }];

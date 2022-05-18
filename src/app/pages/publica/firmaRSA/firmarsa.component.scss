@@ -1,0 +1,77 @@
+.form-inline [fullWidth] {
+  flex: 1;
+}
+
+.form-inline > * {
+  margin: 0 1.5rem 1.5rem 0;
+}
+
+nb-card.inline-form-card nb-card-body {
+  padding-bottom: 0;
+}
+
+.block {
+  display: block;
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+input[type="file"] {
+  display: none;
+}
+
+.custom-file-upload {
+  display: inline-block;
+  border-style: solid;
+  border-width: 0.0625rem;
+  text-transform: uppercase;
+  padding: 0.6875rem 1.125rem;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  line-height: 1rem;
+  background-color: #ffaa00;
+  border-color: #ffaa00;
+  color: #ffffff;
+  transition-duration: 0.15s;
+  transition-property: background-color, border-color, box-shadow, color;
+  transition-timing-function: ease-in;
+  appearance: none;
+  text-align: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  user-select: none;
+  cursor: pointer;
+  font-family: Open Sans, sans-serif;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.custom-file-upload:hover {
+  background-color: #ffc94d;
+  border-color: #ffc94d;
+  color: #ffffff;
+}
+
+.load-image-button-container {
+  display: flex;
+  justify-content: center;
+  margin: auto;
+}
+
+img {
+  max-width: 100%;
+}
+
+.result-text {
+  margin-top: 1rem;
+}
+
+.result {
+  font-weight: bold;
+}

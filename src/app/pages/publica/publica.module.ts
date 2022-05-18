@@ -20,9 +20,10 @@ import { PublicaComponent } from './publica.component';
 import { PublicaRoutingModule } from './publica-routing.module';
 import { RsaComponent } from './rsa/rsa.component';
 import { ElGamalMVComponent } from './elgamalMV/elgamalMV.component';
-import { FirmaComponent } from './firma/firma.component';
+import { FirmaElGamalComponent } from './firmaElGammal/firmaelgamal.component';
 import { RabinComponent } from './rabin/rabin.component';
 import { ElGamalComponent } from './elgamal/elgamal.component';
+import { FirmaRSAComponent } from './firmaRSA/firmarsa.component';
 
 @NgModule({
   imports: [
@@ -48,7 +49,8 @@ import { ElGamalComponent } from './elgamal/elgamal.component';
     RsaComponent,
     ElGamalMVComponent,
     ElGamalComponent,
-    FirmaComponent,
+    FirmaElGamalComponent,
+    FirmaRSAComponent,
     RabinComponent
   ],
 })

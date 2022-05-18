@@ -31,13 +31,18 @@ export const MENU_ITEMS: NbMenuItem[] = [
         title: 'Menezes-Vanstone',
         link: '/pages/publica/elgamalMV',
         icon: 'unlock'
+      },
+      {
+        title: 'Digital Sign (ElGamal)',
+        link: '/pages/publica/elGammalSign',
+        icon: 'book-open'
+      },
+      {
+        title: 'Digital Sign (RSA)',
+        link: '/pages/publica/RSASign',
+        icon: 'book-open'
       }
     ]
-  },
-  {
-    title: 'Digital Sign (DSS)',
-    link: '/pages/publica/firma',
-    icon: 'book-open'
   },
   {
     title: 'Tables & Data',

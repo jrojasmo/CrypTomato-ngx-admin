@@ -1,32 +1,32 @@
 <div class="row justify-content-md-center">
   <div class="col-md-10">
     <nb-card>
-      <nb-card-header>Firma Digital de Archivos (DSS)</nb-card-header>
+      <nb-card-header>Digital Signature of Files with RSA</nb-card-header>
       <nb-card-body>
         <div class="row">
           <div class="col align-self-start" style="display: flex;">
             <div class="load-image-button-container">
-              <label for="file-selector" class="custom-file-upload">Cargar Archivo</label>
+              <label for="file-selector" class="custom-file-upload">Upload File</label>
               <input #fileSelector (change)="fileSelected($event, 'SIGN')" type="file" id="file-selector">
             </div>
           </div>
           <div class="col align-self-end">
             <div class="form-group col-md-10">
-              <label for="fileName" class="label">Nombre del Archivo:</label>
-              <input type="text" [(ngModel)]="model1.fileName" name="fileName" nbInput readonly fullWidth id="fileName">
+              <label for="fileName" class="label">File Name:</label>
+              <input type="text" [(ngModel)]="model1.fileName" name="fileName" nbInput readonly fullWidth id="fileName" placeholder="Upload a File!">
             </div>
           </div>
         </div>
         <div class="row">
           <div class="form-group col-md-12">
             <label for="sha" class="label">SHA256: </label>
-            <input type="text" [(ngModel)]="model1.sha" name="sha" nbInput fullWidth readonly id="sha" placeholder="SHA256 se generará cuando suba el archivo.">
+            <input type="text" [(ngModel)]="model1.sha" name="sha" nbInput fullWidth readonly id="sha" placeholder="SHA256 will be generated when you upload the file.">
           </div>
 
           <div class="col-md-6">
             <form (ngSubmit)="signButton(model1.sha)">
               <div class="buttons">
-                <button type="submit" nbButton status="primary">Firmar Archivo</button>
+                <button type="submit" nbButton status="primary">Sign File</button>
                 <!--<a #downloadAnchor1 class="custom-file-upload" download="imagen-cifrada" href=""
                 title="ImageName">Descargar Imagen</a>-->
                 <!--<button (click)="clearForm($event)" nbButton status="warning">Limpiar</button>-->
@@ -37,14 +37,14 @@
         <br>
         <div class="row">
           <div class="form-group col-md-12">
-            <label for="signTextGen" class="label">Firma generada: </label>
+            <label for="signTextGen" class="label">Signature generated: </label>
             <textarea type="text" [(ngModel)]="model1.fileSign" name="signTextGen" nbInput fullWidth readonly
-              id="signTextGen" placeholder="Oprima 'FIRMAR ARCHIVO' para ver la firma."></textarea>
+              id="signTextGen" placeholder="Press 'SIGN FILE' to view the signature."></textarea>
           </div>
           <div class="form-group col-md-12">
-            <label for="keyGen" class="label">Llave generada: </label>
+            <label for="keyGen" class="label">Generated key: </label>
             <textarea type="text" [(ngModel)]="model1.key" name="keyGen" nbInput fullWidth readonly
-              id="keyGen" placeholder="Oprima 'FIRMAR ARCHIVO' para ver la llave."></textarea>
+              id="keyGen" placeholder="Press 'SIGN FILE' to get the key."></textarea>
           </div>
         </div>
       </nb-card-body>
@@ -55,19 +55,19 @@
 <div class="row justify-content-md-center">
   <div class="col-md-10">
     <nb-card>
-      <nb-card-header>Verificación de Firma Digital de Archivos (DSS)</nb-card-header>
+      <nb-card-header>Digital File Signature Verification (RSA)</nb-card-header>
       <nb-card-body>
         <div class="row">
           <div class="col align-self-start" style="display: flex;">
             <div class="load-image-button-container">
-              <label for="file-selector2" class="custom-file-upload">Cargar Archivo</label>
+              <label for="file-selector2" class="custom-file-upload">Upload File</label>
               <input #fileSelector2 (change)="fileSelected($event, 'VER')" type="file" id="file-selector2">
             </div>
           </div>
           <div class="col align-self-end">
             <div class="form-group col-md-10">
-              <label for="fileName" class="label">Nombre del Archivo:</label>
-              <input type="text" [(ngModel)]="model2.fileName" name="fileName2" nbInput readonly fullWidth id="fileName2">
+              <label for="fileName" class="label">File Name:</label>
+              <input type="text" [(ngModel)]="model2.fileName" name="fileName2" nbInput readonly fullWidth id="fileName2" placeholder="Upload a File!">
             </div>
           </div>
         </div>
@@ -80,21 +80,21 @@
         <br>
         <div class="row">
           <div class="form-group col-md-12">
-            <label for="signText" class="label">Firma: </label>
+            <label for="signText" class="label">Sign: </label>
             <textarea type="text" [(ngModel)]="model2.fileSign" name="signText" nbInput fullWidth
-              id="signText" placeholder="Ingrese la firma. Use números separados por comas."></textarea>
+              id="signText" placeholder="Enter the signature. Use the characters A-Z, a-z, 0-9, + or /."></textarea>
           </div>
           <div class="form-group col-md-12">
-            <label for="key" class="label">Llave: </label>
+            <label for="key" class="label">Key: </label>
             <textarea type="text" [(ngModel)]="model2.key" name="key" nbInput fullWidth
-              id="key" placeholder="Ingrese la llave. Use números separados por comas."></textarea>
+              id="key" placeholder="Enter the key. Use the characters A-Z, a-z, 0-9, + or /."></textarea>
           </div>
         </div>
         <div class="row">
           <div class="col-md-6">
             <form (ngSubmit)="verifyButton(model2.sha, model2.key, model2.fileSign)">
               <div class="buttons">
-                <button type="submit" nbButton status="primary">Verificar Firma</button>
+                <button type="submit" nbButton status="primary">Check Signature</button>
                 <!--<a #downloadAnchor1 class="custom-file-upload" download="imagen-cifrada" href=""
                 title="ImageName">Descargar Imagen</a>-->
                 <!--<button (click)="clearForm($event)" nbButton status="warning">Limpiar</button>-->
