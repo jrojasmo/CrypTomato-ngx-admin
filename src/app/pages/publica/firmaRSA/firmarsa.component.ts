@@ -87,7 +87,8 @@ export class FirmaRSAComponent {
     var firma = this.signSha(shaTxt.toString(), key[0], key[1], key[3]);
     console.log(firma);
     this.model1.fileSign = firma.toString();
-    this.model1.key = this.arrToBase64(key, 6);
+    var keyVer = [ key[0] * key[1], key[2]];
+    this.model1.key = this.arrToBase64(keyVer, 6);
   }
 
   verifyButton(shaTxt, keyTxt, signTxt) {
@@ -108,7 +109,7 @@ export class FirmaRSAComponent {
       return;
     }
     var key = this.base64ToArr(keyTxt, 6);
-    if (this.verifySha(shaTxt.toString(), signTxt, key[0], key[1], key[2])) {
+    if (this.verifySha(shaTxt.toString(), signTxt, key[0], key[1])) {
       this.showMsg("The entered signature and key match the file! ");
     } else {
       this.showMsg("The signature and password entered do NOT match the file! :(");
@@ -317,8 +318,8 @@ export class FirmaRSAComponent {
     return this.powerBigInt(BigInt(x), BigInt(a), BigInt(p) * BigInt(q));
   }
 
-  verify(x, y, p, q, b) {
-    return BigInt(x) % (BigInt(p) * BigInt(q)) == this.powerBigInt(BigInt(y), BigInt(b), BigInt(p) * BigInt(q));
+  verify(x, y, n, b) {
+    return BigInt(x) % BigInt(n) == this.powerBigInt(BigInt(y), BigInt(b), BigInt(n));
   }
 
   signSha(shaString, p, q, a) {
@@ -341,7 +342,7 @@ export class FirmaRSAComponent {
     return signText;
   }
 
-  verifySha(shaString, signStr, p, q, b) {
+  verifySha(shaString, signStr, n, b) {
     let arr = [];
     let jump = 4;
     let signArr = [];
@@ -356,7 +357,7 @@ export class FirmaRSAComponent {
     //console.log(signArr);
     for (let i = 0; i < arr.length; i++) {
       //console.log(verify(arr[i], signArr[i], p, q, b));
-      if (!this.verify(arr[i], signArr[i], p, q, b)) return false;
+      if (!this.verify(arr[i], signArr[i], n, b)) return false;
     }
     return true;
   }

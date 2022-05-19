@@ -87,7 +87,7 @@ export class FirmaElGamalComponent {
     var firma = this.signSha(shaTxt.toString(), key[0], key[1], key[3]);
     console.log(firma);
     this.model1.fileSign = firma.toString();
-    this.model1.key = this.arrToBase64(key, 5);
+    this.model1.key = this.arrToBase64(key.slice(0, 3), 5);
   }
 
   verifyButton(shaTxt, keyTxt, signTxt) {
