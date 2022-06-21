@@ -8,9 +8,9 @@ export const MENU_ITEMS: NbMenuItem[] = [
     home: true,
   },
   {
-    title: 'PUBLIC KEY',
-    icon: 'star',
-    expanded: true,
+    title: 'Public Key',
+    icon: 'star-outline',
+    expanded: false,
     children: [
       {
         title: 'RSA',
@@ -43,6 +43,16 @@ export const MENU_ITEMS: NbMenuItem[] = [
         icon: 'book-open'
       }
     ]
+  },
+  {
+    title: 'Visual Cryptogrphy',
+    icon: 'eye-outline',
+    link: '/pages/crpvisual/visual'
+  },
+  {
+    title: 'Blockchain Simulation',
+    icon: 'link-2',
+    link: '/pages/simulation/blockchain'
   },
   {
     title: 'Tables & Data',

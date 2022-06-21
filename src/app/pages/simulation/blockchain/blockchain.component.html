@@ -1,0 +1,115 @@
+<div class="row">
+  <div class="col-md-8 offset-md-2">
+    <nb-card>
+      <nb-card-header>THIS IS BLOCKCHAIN 🤑</nb-card-header>
+      <nb-card-body>
+        <h3>COOMING SOON ...</h3>
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-6">
+    <nb-card>
+      <nb-card-header>BLOCKCHAIN</nb-card-header>
+      <nb-card-body>
+
+        <form (ngSubmit)="cifrar(model1.textoClaro, model1.numN, model1.numB)">
+
+          <div class="form-group">
+            <label for="textoClaro" class="label">Plaintext</label>
+            <textarea rows="4" type="text" [(ngModel)]="model1.textoClaro" name="textoClaro" nbInput fullWidth id="textoClaro"
+              placeholder="Insert the text to be encrypted. Use English alphabet characters."></textarea>
+          </div>
+          <div class="row">
+            <div class="col align-self-start">
+              <div class="form-group col-md-6">
+                <label for="numN" class="label">Number n:</label>
+                <input class="fix-width" type="number" [(ngModel)]="model1.numN" name="numNC" nbInput id="numNC"
+                  placeholder="Enter n">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col align-self-end">
+              <div class="form-group col-md-6">
+                <label for="numB" class="label">Number b:</label>
+                <input class="fix-width" type="number" [(ngModel)]="model1.numB" name="numBC" nbInput id="numBC"
+                  placeholder="Enter b">
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="textoCifrado" class="label">Ciphertext</label>
+            <textarea rows="4" type="text" [(ngModel)]="model1.textoCifrado" name="textoCifrado" nbInput fullWidth
+              id="textoCifrado" placeholder="Click on 'ENCRYPT' to view the ciphertext" readonly></textarea>
+          </div>
+
+          <div class="buttons">
+            <button type="submit" nbButton status="primary">Encrypt</button>
+            <button (click)="clearForm1($event, model1)" nbButton status="warning">Clean up</button>
+          </div>
+
+        </form>
+
+      </nb-card-body>
+    </nb-card>
+  </div>
+
+  <div class="col-md-6">
+    <nb-card>
+      <nb-card-header>BLOCKCHAIN</nb-card-header>
+      <nb-card-body>
+
+        <form (ngSubmit)="descifrar(model2.textoCifrado, model2.numP, model2.numQ, model2.numB)">
+
+          <div class="form-group">
+            <label for="textoCifrado" class="label">Ciphertext</label>
+            <textarea rows="4" type="text" [(ngModel)]="model2.textoCifrado" name="textoCifrado" nbInput fullWidth
+              id="textoCifrado"
+              placeholder="Insert the text to be decrypted. Use the characters A-Z, a-z, 0-9, + or /."></textarea>
+          </div>
+          <div class="row">
+            <div class="col align-self-start">
+              <div class="form-group col-md-12">
+                <label for="numP" class="label">Prime p:</label>
+                <input class="form-control" type="number" [(ngModel)]="model2.numP" name="numPD" nbInput id="numPD"
+                  placeholder="Enter p">
+              </div>
+            </div>
+            <div class="col align-self-end">
+              <div class="form-group col-md-12">
+                <label for="numQ" class="label">Prime q:</label>
+                <input class="form-control" type="number" [(ngModel)]="model2.numQ" name="numQD" nbInput id="numQD"
+                  placeholder="Enter q">
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col align-self-start">
+              <div class="form-group col-md-6">
+                <label for="numB" class="label">Number b:</label>
+                <input class="fix-width" type="number" [(ngModel)]="model2.numB" name="numBD" nbInput id="numBD"
+                  placeholder="Enter b">
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="textoClaro" class="label">Plaintext</label>
+            <textarea rows="4" type="text" [(ngModel)]="model2.textoClaro" name="textoClaro" nbInput fullWidth id="textoClaro"
+              placeholder="Click on 'DECRYPT' to view the decoded text" readonly></textarea>
+          </div>
+
+          <div class="buttons">
+            <button type="submit" nbButton status="primary">Decrypt</button>
+            <button (click)="clearForm2($event, model2)" nbButton status="warning">Clean up</button>
+          </div>
+
+        </form>
+
+      </nb-card-body>
+    </nb-card>
+  </div>
+
+</div>

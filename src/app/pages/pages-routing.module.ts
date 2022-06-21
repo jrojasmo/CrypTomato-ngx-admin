@@ -29,6 +29,16 @@ const routes: Routes = [{
         .then(m => m.PublicaModule),
     },
     {
+      path: 'crpvisual',
+      loadChildren: () => import('./crp-visual/crp-visual.module')
+        .then(m => m.CrpVisualModule),
+    },
+    {
+      path: 'simulation',
+      loadChildren: () => import('./simulation/simulation.module')
+        .then(m => m.SimulationModule),
+    },
+    {
       path: '',
       redirectTo: 'home',
       pathMatch: 'full',

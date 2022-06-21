@@ -125,11 +125,11 @@ export class FirmaElGamalComponent {
   clearForm($event) {
     $event.preventDefault();
     //this.limpiarCanvas(this.canvas);
-  }
-
-  clearForm3($event) {
-    $event.preventDefault();
-    //this.model3.textoClaro = '';
+    this.model2.sha = '';
+    this.model2.fileName = '';
+    this.model2.fileSign = '';
+    this.model2.key = '';
+    this.model2.result = '';
   }
 
   showMsg(msg) {

@@ -1,0 +1,113 @@
+<div class="row">
+  <div class="col-md-12">
+    <nb-card>
+      <nb-card-header>Encrypt an Image with a Color Lattice</nb-card-header>
+      <nb-card-body>
+        <div class="col-md-12">
+          <label class="label">Press 'UPLOAD IMAGE' button (max. 600x600px) and your image will apear in a 8 colors
+            version, then
+            click on 'ENCRYPT' (this action can take up to 10s) and save both transparencies.
+            Also, if you want to pass the transparencies to the decryption area you can press 'FILL DECRYPTION
+            INPUT'.</label>
+        </div>
+        <br>
+        <div class="row">
+          <div class="col-md-7"></div>
+          <h6>🟥🟩🟦 Input Image 🅿️🅰️🟨</h6>
+        </div>
+        <div class="row justify-content-arround">
+          <div class="col-md-5">
+            <div class="row justify-content-center">
+              <div class="load-image-button-container">
+                <label for="fileSelectorEn" class="custom-file-upload">Upload an Image</label>
+                <input #fileSelectorEn (change)="funcInput($event)" type="file" id="fileSelectorEn" accept="image/*">
+              </div>
+            </div>
+            <br>
+            <div class="row justify-content-center">
+              <button class="col-5" (click)="getTrans($event)" nbButton status="danger">Encrypt!</button>
+            </div>
+            <br>
+            <div class="row justify-content-center">
+              <button class="col-5" (click)="cleanFormEn($event)" nbButton status="warning">Clean Up</button>
+            </div>
+          </div>
+          <div class="div_canvas col-md-7">
+            <canvas #canvasNormal id="canvasNormal" width="10" height="10"></canvas>
+          </div>
+        </div>
+        <br>
+        <div class="row col-md-12 justify-content-around">
+          <h6>Transparency 1</h6>
+          <h6>Transparency 2</h6>
+        </div>
+        <div class="row">
+          <div class="div_canvas col-md-6">
+            <canvas #canvasTrans1 id="canvasTrans1" width="10" height="10"></canvas>
+          </div>
+          <div class="div_canvas col-md-6">
+            <canvas #canvasTrans2 id="canvasTrans2" width="10" height="10"></canvas>
+          </div>
+        </div>
+        <br>
+        <div class="row justify-content-center">
+          <button class="col-3" (click)="fillToDecrypt($event)" nbButton status="basic"> Fill decryption input
+            ⬇</button>
+        </div>
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <nb-card>
+      <nb-card-header>Decrypt an Image with a Color Lattice</nb-card-header>
+      <nb-card-body>
+        <div class="col-md-12">
+          <label class="label">Please upload the two generated transparencies by clicking 'UPLOAD TRANSPARENCIES' and
+            then press the
+            'DECRYPT' button to see the original image. If transparencies already appear there just press
+            'DECRYPT'.</label>
+        </div>
+        <br>
+        <div class="row">
+          <div class="load-image-button-container">
+            <label for="fileSelectorDe" class="custom-file-upload">Upload Transparencies</label>
+            <input #fileSelectorDe (change)="funcInputDe($event)" type="file" id="fileSelectorDe" accept="image/*"
+              multiple>
+          </div>
+        </div>
+        <br>
+        <div class="row justify-content-center">
+          <button class="col-2" (click)="cleanFormDe($event)" nbButton status="warning">Clean Up</button>
+        </div>
+        <br>
+        <div class="row col-md-12 justify-content-around">
+          <h6>Transparency 1</h6>
+          <h6>Transparency 2</h6>
+        </div>
+        <div class="row">
+          <div class="div_canvas col-md-6">
+            <canvas #canvasTrans1up id="canvasTrans1up" width="10" height="10"></canvas>
+          </div>
+          <div class="div_canvas col-md-6">
+            <canvas #canvasTrans2up id="canvasTrans2up" width="10" height="10"></canvas>
+          </div>
+        </div>
+        <br>
+        <div class="row justify-content-around">
+          <h6> 🟥🟩🟦 </h6>
+          <button class="col-4" (click)="stackTrans($event)" nbButton status="danger">Decrypt!</button>
+          <h6> 🅿️🅰️🟨 </h6>
+        </div>
+        <br>
+        <div class="row">
+          <div class="div_canvasSol col-md-12">
+            <canvas #canvasDec id="canvasDec" width="10" height="10"></canvas>
+          </div>
+        </div>
+      </nb-card-body>
+    </nb-card>
+  </div>
+
+</div>

@@ -91,13 +91,14 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-md-6">
+          <div class="col-md-12">
             <form (ngSubmit)="verifyButton(model2.sha, model2.key, model2.fileSign)">
               <div class="buttons">
                 <button type="submit" nbButton status="primary">Check Signature</button>
                 <!--<a #downloadAnchor1 class="custom-file-upload" download="imagen-cifrada" href=""
                 title="ImageName">Descargar Imagen</a>-->
                 <!--<button (click)="clearForm($event)" nbButton status="warning">Limpiar</button>-->
+                <button (click)="clearForm($event)" nbButton status="warning">Clean up</button>
               </div>
             </form>
           </div>
