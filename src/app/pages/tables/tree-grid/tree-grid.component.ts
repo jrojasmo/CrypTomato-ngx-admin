@@ -21,8 +21,8 @@ interface FSEntry {
 })
 export class TreeGridComponent {
   customColumn = 'name';
-  defaultColumns = [ 'size', 'kind', 'items' ];
-  allColumns = [ this.customColumn, ...this.defaultColumns ];
+  defaultColumns = ['size', 'kind', 'items'];
+  allColumns = [this.customColumn, ...this.defaultColumns];
 
   dataSource: NbTreeGridDataSource<FSEntry>;
 
@@ -79,7 +79,7 @@ export class TreeGridComponent {
 }
 
 @Component({
-  selector: 'ngx-fs-icon',
+  selector: 'ngx-fs-icon-DIS',
   template: `
     <nb-tree-grid-row-toggle [expanded]="expanded" *ngIf="isDir(); else fileIcon">
     </nb-tree-grid-row-toggle>

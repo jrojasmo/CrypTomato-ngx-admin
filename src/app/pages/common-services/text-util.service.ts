@@ -7,6 +7,13 @@ export class TextUtilService {
 
   constructor() { }
 
+  ranKey(size) {
+    var arrTemp = Array(size)
+      .fill(0)
+      .map(() => Math.round(Math.random() * 25));
+    return this.codesToString(arrTemp);
+  }
+
   rmSpanishAccents (inputText) {
     var accents = "ÁÄáäÓÖóöÉËéÇçÍÏíïÚÜúüÑñ";
     var noAccents = "AAaaOOooEEeeCcIIiiUUuuNn";

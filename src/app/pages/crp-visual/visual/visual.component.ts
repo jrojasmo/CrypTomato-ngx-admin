@@ -5,7 +5,7 @@ import { TextUtilService } from '../../common-services/text-util.service';
 
 
 @Component({
-  selector: 'ngx-rsa',
+  selector: 'ngx-crypVisual',
   styleUrls: ['./visual.component.scss'],
   templateUrl: './visual.component.html',
 })

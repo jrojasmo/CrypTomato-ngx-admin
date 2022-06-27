@@ -1,410 +1,593 @@
-import { Component } from '@angular/core';
-import { NbDialogService } from '@nebular/theme';
+import { Component, Input } from '@angular/core';
+import { NbDialogService, NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
 import { DialogoComponent } from '../../dialogo/dialogo.component';
 import { TextUtilService } from '../../common-services/text-util.service';
 
-class Pair {
-  x: number;
-  y: number;
-  constructor(x = 0, y = 0) {
-    this.x = x;
-    this.y = y;
+const SHA256 = require("crypto-js/sha256");
+
+/////// FUNC TO CIPHER
+class VigenereObj {
+
+  constructor(private util: TextUtilService) { }
+
+  getTexts() {
+    var array = [
+      "inthetownwhereiwasbornlivedamanwhosailedtoseaandhetoldusofhislifeinthelandofsubmarinessowesailedontothesuntilwefoundaseaofgreenandwelivedbeneaththewavesinouryellowsubmarineweallliveinayellowsubmarineyellowsubmarineyellowsubmarineweallliveinayellowsub",
+      "ahlookatallthelonelypeopleeleanorrigbypicksupthericeinthechurchwhereaweddinghasbeenlivesinadreamwaitsatthewindowwearingthefacethatshekeepsinajarbythedoorwhoisitforallthelonelypeoplewheredotheyallcomefromallthelonelypeoplewheredotheyallbelongfathermck",
+      "nooneithinkisinmytreeimeanitmustbehighorlowthatisyoucantyouknowtuneinbutitsallrightthatisithinkitsnottoobadletmetakeyoudowncauseimgoingtostrawberryfieldsnothingisrealandnothingtogethungaboutstrawberryfieldsforeverlivingiseasywitheyesclosedmisundersta",
+      "heyjudedontmakeitbadtakeasadsongandmakeitbetterremembertoletherintoyourheartthenyoucanstarttomakeitbetterheyjudedontbeafraidyouweremadetogooutandgethertheminuteyouletherunderyourskinthenyoubegintomakeitbetterandanytimeyoufeelthepainheyjuderefraindont",
+      "herecomeoldflattophecomegroovingupslowlyhegotjoojooeyeballheoneholyrollerhegothairdowntohiskneegottobeajokerhejustdowhathepleasehewearnoshoeshinehegottoejamfootballhegotmonkeyfingerheshootcocacolahesayiknowyouyouknowmeonethingicantellyouisyougottobef",
+      "yesterdayallmytroublesseemedsofarawaynowitlooksasthoughtheyreheretostayohibelieveinyesterdaysuddenlyimnothalfthemaniusedtobetheresashadowhangingovermeohyesterdaycamesuddenlywhyshehadtogoidontknowshewouldntsayisaidsomethingwrongnowilongforyesterdayyes"
+    ];
+    for (var i = 0; i < array.length; ++i) {
+      array[i] = this.util.normalizeInput(array[i]);
+    }
+    return array;
+  }
+  vigenere(clearText, key, cipher) {
+    var normalTextCodes = this.util.getCharCodes(this.util.normalizeInput(clearText));
+    var normalKeyCodes = this.util.getCharCodes(this.util.normalizeInput(key));
+    var m = normalKeyCodes.length;
+    var indexKey = 0;
+    for (var i = 0; i < normalTextCodes.length; i++) {
+      indexKey = i % m;
+      if (cipher)
+        normalTextCodes[i] = (normalTextCodes[i] + normalKeyCodes[indexKey]) % 26;
+      else
+        normalTextCodes[i] =
+          (normalTextCodes[i] - normalKeyCodes[indexKey] + 26) % 26;
+    }
+    return this.util.codesToString(normalTextCodes);
+  }
+  vigenereCipher(clearText, key) {
+    return this.vigenere(clearText, key, true);
+  }
+  vigenereDecipher(cipherText, key) {
+    return this.vigenere(cipherText, key, false);
+  }
+  vigenereCryptanalysis(cipherText, m) {
+    var possibleKey = this.splitStr(cipherText, m);
+    const expectedCI = 0.065;
+    var minDiff = -1;
+    var indexMinDiff = -1;
+    var testDiff = 0;
+    for (var i = 0; i < m; i++) {
+      minDiff = 100;
+      indexMinDiff = 0;
+      for (var j = 0; j < 26; j++) {
+        testDiff = Math.abs(this.funM_g(possibleKey[i], j) - expectedCI);
+        if (testDiff < minDiff) {
+          minDiff = testDiff;
+          indexMinDiff = j;
+        }
+      }
+      possibleKey[i] = this.util.codesToString([indexMinDiff])
+    }
+    console.log('posible key: ' + possibleKey.join(""));
+    console.log(this.vigenereDecipher(cipherText, possibleKey.join("")));
+    return possibleKey.join("");
+  }
+  splitStr(strText, m) {
+    var strToSend = [];
+    for (var i = 0; i < m; i++) {
+      strToSend.push("");
+    }
+    for (var i = 0; i < strText.length; i++) {
+      strToSend[i % m] += strText.charAt(i);
+    }
+    return strToSend;
+  }
+  funM_g(strText, g) {
+    // Probabilidades estandar de encontrarse la i-ésima letra de un texto en inglés.  
+    var standardProbabilities =
+      [0.082, 0.015, 0.028, 0.043, 0.127, 0.022, 0.020, 0.061, 0.070,
+        0.002, 0.008, 0.040, 0.024, 0.067, 0.075, 0.019, 0.001, 0.060,
+        0.063, 0.091, 0.028, 0.010, 0.023, 0.001, 0.020, 0.001];
+    var text = this.util.normalizeInput(strText);
+    var frecuencies = {};
+    for (var i = 0; i < text.length; i++) {
+      if (frecuencies[text.charAt(i)])
+        frecuencies[text.charAt(i)] += 1;
+      else
+        frecuencies[text.charAt(i)] = 1;
+    }
+    var t = [];
+    for (var i = 0; i < standardProbabilities.length; i++) {
+      t = [(i + g) % 26];
+      if (frecuencies[this.util.codesToString(t)]) {
+        standardProbabilities[i] *= frecuencies[this.util.codesToString(t)];
+      }
+      else {
+        standardProbabilities[i] = 0;
+      }
+    }
+    var sum = 0;
+    for (var i = 0; i < standardProbabilities.length; i++) {
+      sum += standardProbabilities[i];
+    }
+    return sum / strText.length;
+  }
+
+}
+/////// BLOCKCHAIN
+class Transaction {
+  from: string;
+  to: string;
+  amount: number;
+  constructor(from, to, amount) {
+    this.from = from;
+    this.to = to;
+    this.amount = amount;
+  }
+  calculateHash() {
+    return SHA256(this.from + this.to + this.amount).toString();
+  }
+}
+class Block {
+  time: string;
+  previoushHash: string;
+  hash: string;
+  text: string;
+  transactions: Transaction[];
+  constructor(time, transactions, previoushHash = "") {
+    this.time = time;
+    this.transactions = transactions;
+    this.previoushHash = previoushHash;
+    this.hash = this.getBlockHash();
+    this.text = "";
+  }
+  getBlockHash() {
+    return SHA256(
+      this.time + JSON.stringify(this.transactions) + this.previoushHash
+    ).toString();
+  }
+}
+class BlockChain {
+  blockChainSuperUser: string;
+  chain: Block[];
+  height: number;
+  pendingTransactions: any[];
+  blocksToMine: Block[];
+  miningReward: number;
+  keyLength: number;
+  vigenere: VigenereObj;
+  texts: string[];
+  users: string[];
+  constructor(private util: TextUtilService) {
+    this.vigenere = new VigenereObj(util);
+    this.blockChainSuperUser = "Cryptomato";
+    this.chain = [this.createGenesisBlock()];
+    this.height = 4;
+    this.pendingTransactions = [];
+    this.blocksToMine = []; //Arreglo de bloque y el texto cifrado
+    this.miningReward = 0.25;
+    this.keyLength = 10;
+    this.texts = this.vigenere.getTexts();
+    this.users = ["beto", "rosa", "hugo", "alice"];
+  }
+  createGenesisBlock() {
+    var genesis = new Block(new Date(Date.now()).toString(), [], "");
+    var transactions = [];
+    var usersGen = ["beto", "rosa", "hugo", "alice"];
+    for (var i = 0; i < 4; ++i) {
+      transactions.push(
+        new Transaction(this.blockChainSuperUser, usersGen[i], 10)
+      );
+    }
+    genesis.transactions = transactions;
+    genesis.text = "The Genesis Block";
+    genesis.hash = genesis.getBlockHash();
+    return genesis;
+  }
+  printPendingTransactions() {
+    for (var i = 0; i < this.pendingTransactions.length; ++i) {
+      console.log(
+        "Transaction #" +
+        (i + 1) +
+        " " +
+        this.pendingTransactions[i].from +
+        " " +
+        this.pendingTransactions[i].to +
+        " " +
+        this.pendingTransactions[i].amount
+      );
+    }
+  }
+  getBalanceOfUser(user) {
+    var balance = 0;
+    user = this.util.normalizeInput(user);
+    //console.log(user);
+    for (var i = 0; i < this.chain.length; ++i) {
+      var tempBlock = this.chain[i];
+      for (var j = 0; j < tempBlock.transactions.length; ++j) {
+        var tempTransaction = tempBlock.transactions[j];
+        //console.log(normalizeInput(tempTransaction.from));
+        if (this.util.normalizeInput(tempTransaction.from) == user) {
+          balance -= tempTransaction.amount;
+        }
+        if (this.util.normalizeInput(tempTransaction.to) == user) {
+          balance += tempTransaction.amount;
+        }
+      }
+    }
+    return balance;
+  }
+
+  getTotalBalance() {
+    var usersBalance = [];
+    for (var z = 0; z < this.users.length; ++z) {
+      var userInfo = [];
+      var tempUsuario = this.users[z];
+      var historicBalance = 0;
+      var pendingBalance = 0;
+
+      tempUsuario = this.util.normalizeInput(tempUsuario);
+      for (var i = 0; i < this.chain.length; ++i) {
+        var tempBlock = this.chain[i];
+        for (var j = 0; j < tempBlock.transactions.length; ++j) {
+          var tempTransaction = tempBlock.transactions[j];
+          if (this.util.normalizeInput(tempTransaction.from) == tempUsuario) {
+            historicBalance -= tempTransaction.amount;
+          }
+          if (this.util.normalizeInput(tempTransaction.to) == tempUsuario) {
+            historicBalance += tempTransaction.amount;
+          }
+        }
+      }
+      for (var i = 0; i < this.pendingTransactions.length; ++i) {
+        if (this.util.normalizeInput(this.pendingTransactions[i].from) == tempUsuario)
+          pendingBalance -= this.pendingTransactions[i].amount;
+      }
+      for (var i = 0; i < this.blocksToMine.length; ++i) {
+        var tempBlock = this.blocksToMine[i];
+        for (var j = 0; j < tempBlock.transactions.length; ++j) {
+          if (this.util.normalizeInput(tempBlock.transactions[j].from) == tempUsuario)
+            pendingBalance -= tempBlock.transactions[j].amount;
+        }
+      }
+      userInfo.push(tempUsuario);
+      userInfo.push(historicBalance);
+      userInfo.push(pendingBalance);
+      usersBalance.push(userInfo);
+    }
+    return usersBalance;
+  }
+
+  getLastBlock() {
+    return this.chain[this.chain.length - 1];
+  }
+  mineBlock(guess, miningBlockNumber, minerName) {
+    //add to this block the latest block address
+    if (
+      miningBlockNumber > this.blocksToMine.length ||
+      this.blocksToMine.length == 0
+    ) {
+      return "Invalid block ID";
+    }
+    var clearGuess = this.vigenere.vigenereDecipher(
+      this.blocksToMine[miningBlockNumber].text,
+      guess
+    );
+    for (var i = 0; i < this.texts.length; ++i) {
+      if (clearGuess == this.texts[i]) {
+        var reward = new Transaction(
+          this.blockChainSuperUser,
+          minerName,
+          this.miningReward
+        );
+        this.blocksToMine[miningBlockNumber].transactions.push(reward);
+        var lastHash = this.getLastBlock().getBlockHash();
+        this.chain.push(this.blocksToMine[miningBlockNumber]);
+        this.blocksToMine.splice(miningBlockNumber, 1);
+        this.getLastBlock().time = new Date(Date.now()).toString();
+        this.getLastBlock().previoushHash = lastHash;
+        this.getLastBlock().hash = this.getLastBlock().getBlockHash();
+        // Check is there a new user
+        const trans = this.getLastBlock().transactions;
+        for (let j = 0; j < trans.length; j++) {
+          if (!this.users.includes(trans[j].to)) {
+            this.users.push(trans[j].to);
+          }
+        }
+        console.log("Block mined, the hash is: " + this.getLastBlock().hash);
+        return "Block successfully mined! 🤑";
+      }
+    }
+    console.log("Incorrect guess. Please try again.");
+    return "Incorrect guess. Please try again.";
+
+  }
+  isValid(transaction) {
+    var userBalance = this.getBalanceOfUser(transaction.from);
+    var user = this.util.normalizeInput(transaction.from);
+    for (var i = 0; i < this.pendingTransactions.length; ++i) {
+      if (this.util.normalizeInput(this.pendingTransactions[i].from) == user)
+        userBalance -= this.pendingTransactions[i].amount;
+    }
+    for (var i = 0; i < this.blocksToMine.length; ++i) {
+      var tempBlock = this.blocksToMine[i];
+      for (var j = 0; j < tempBlock.transactions.length; ++j) {
+        if (this.util.normalizeInput(tempBlock.transactions[j].from) == user)
+          userBalance -= tempBlock.transactions[j].amount;
+      }
+    }
+    return userBalance >= transaction.amount;
+  }
+
+  addBlocksToMine() {
+    if (this.pendingTransactions.length == this.height) {
+      var block = new Block("", [], "");
+      for (var i = 0; i < 4; ++i) {
+        block.transactions.push(this.pendingTransactions[i]);
+      }
+      for (var i = 3; i >= 0; --i) {
+        this.pendingTransactions.splice(i, 1);
+      }
+      var key = this.util.ranKey(this.keyLength);
+      //var key = "aaaaaaaaaa";
+      console.log("KEY", key);
+      var cleartext = this.texts[Math.floor(Math.random() * this.texts.length)];
+      block.text = this.vigenere.vigenereCipher(cleartext, key);
+      // Add temp time
+      block.time = new Date(Date.now()).toString();
+      this.blocksToMine.push(block);
+    }
+  }
+  addTransaction(transaction) {
+    var msgTrans = "";
+    if (!transaction.from || !transaction.to) {
+      msgTrans = "Please type the user to send or receive 🍅.";
+      return msgTrans;
+    }
+    if (transaction.from == transaction.to) {
+      msgTrans = "You cannot send 🍅 to yourself, they are meant to be shared.";
+      return msgTrans;
+    }
+    if (!this.isValid(transaction)) {
+      msgTrans = "The transaction is not valid, the sender must have enough 🍅 to send in his available pool.";
+      return msgTrans;
+    }
+    this.pendingTransactions.push(transaction);
+    this.addBlocksToMine();
+    msgTrans = "Succesfully added to Pending Transactions!";
+    return msgTrans;
   }
 }
 
 @Component({
-  selector: 'ngx-rsa',
+  selector: 'ngx-blockchain',
   styleUrls: ['./blockchain.component.scss'],
   templateUrl: './blockchain.component.html',
 })
 
 export class BlockchainComponent {
-
-  model1 = {
-    textoClaro: '',
-    numN: '',
-    numB: '',
-    textoCifrado: ''
+  // BLOCKCHAIN
+  tomatoChain: BlockChain;
+  tableTomatos: any[];
+  tableColTomatos: string[];
+  tableTomatoChain: any[];
+  tableColTomatoChain: string[];
+  tableTomatoPending: any[];
+  tableColTomatoPending: string[];
+  tableTomatoMine: any[];
+  tableColTomatoMine: string[];
+  // MODELS
+  modelTrans = {
+    from: '',
+    to: '',
+    amount: 0.1
+  }
+  modelMine = {
+    idList: [],
+    id: 0,
+    text: "",
+    key: "",
+    minerName: ""
+  }
+  modelDecipher = {
+    cipherText: "",
+    key: "",
+    clearText: ""
+  }
+  modelAnlysis = {
+    cipherText: "",
+    lenKey: 1,
+    guessKey: ""
   }
 
-  model2 = {
-    textoCifrado: '',
-    numP: '',
-    numQ: '',
-    numB: '',
-    textoClaro: ''
-  }
-
-  model3 = {
-    numP: '',
-    numQ: '',
-    numN: '',
-    numB: ''
-  }
-
-  maxNumber = 0;
-  primeArray = [];
-  primeNumber = 0;
-  alphSize = 0;
-  minValueN = 0;
-  blockSize = 0;
+  vigenere: VigenereObj;
 
   constructor(private dialogService: NbDialogService, private util: TextUtilService) {
-    this.blockSize = 3;
-    this.minValueN = 18279;
-    this.maxNumber = 11000;
-    this.primeArray = this.sieveOfEratosthenes(this.maxNumber);
-    this.primeNumber = this.primeArray.length;
-    this.alphSize = 26;
+    this.tableColTomatos = ['User', 'Balance', 'Pending'];
+    this.tableColTomatoChain = ['Hash', 'Time', 'Prev_Hash'];
+    this.tableColTomatoPending = ['From', 'To', 'Amount'];
+    this.tableColTomatoMine = ['ID', 'Time', 'Amount'];
+    this.vigenere = new VigenereObj(util);
+    this.tomatoChain = new BlockChain(util);
+    this.updateTableTomatos();
+    this.updateTableTomatoChain();
+    this.updateTablePending();
+    this.updateTableTomatoMine();
   }
-
-  matchExact(str, r) {
-    r.lastIndex = 0;
-    var match = str.match(r);
-    return match && str === match[0];
-  }
-
-  cifrar(textoClaro, n, b) {
-    //textoClaro = this.util.normalizeInput(textoClaro);
-    if (!n || !b || n < this.minValueN) {
-      this.showClaveIncorrecta();
+  // BLOCKCHAIN FUNC
+  sendTransaction(from, to, amount) {
+    const amountN = Number(amount);
+    if (amountN <= 0) {
+      this.showTxtMessage("The amount must be greater or equal to zero.");
       return;
     }
-    this.model1.textoCifrado = this.cipherRSA(textoClaro, parseInt(n, 10), parseInt(b, 10)).toString();
+    const tempTrans = new Transaction(this.util.normalizeInput(from), this.util.normalizeInput(to), amountN);
+    const resultMsg = this.tomatoChain.addTransaction(tempTrans);
+    this.showTxtMessage(resultMsg);
+    console.log(JSON.stringify(this.tomatoChain.pendingTransactions));
+    this.updateTableTomatos();
+    this.updateTablePending();
+    this.updateTableTomatoMine();
   }
-
-  descifrar(textoCifrado, p, q, b) {
-    if (!p || !q || !b || p*q < this.minValueN || textoCifrado.length%5!=0) {
-      this.showClaveIncorrecta();
+  updateTableTomatos() {
+    const arr = this.tomatoChain.getTotalBalance();
+    var tableData = [];
+    var tObj = {};
+    for (let i = 0; i < arr.length; i++) {
+      tObj = {
+        data: { User: arr[i][0], Balance: arr[i][1], Pending: Math.abs(Number(arr[i][2])) }
+      }
+      tableData.push(tObj);
+    }
+    //console.log(JSON.stringify(tableData));
+    this.tableTomatos = tableData;
+  }
+  updateTableTomatoChain() {
+    const arr = this.tomatoChain.chain;
+    var tableData = [];
+    var tObj = {};
+    var tChildrenArr = [];
+    var tChildrenObj = {};
+    for (let i = 0; i < arr.length; i++) {
+      tChildrenArr = [];
+      for (let j = 0; j < arr[i].transactions.length; j++) {
+        tChildrenObj = {
+          data: { Hash: arr[i].transactions[j].from, Time: arr[i].transactions[j].to, Prev_Hash: arr[i].transactions[j].amount },
+        };
+        tChildrenArr.push(tChildrenObj);
+      }
+      tObj = {
+        data: { Hash: arr[i].hash, Time: arr[i].time.split('(')[0], Prev_Hash: arr[i].previoushHash },
+        children: tChildrenArr
+      };
+      tableData.push(tObj);
+    }
+    //console.log(JSON.stringify(tableData));
+    this.tableTomatoChain = tableData;
+  }
+  updateTablePending() {
+    const arr = this.tomatoChain.pendingTransactions;
+    var tableData = [];
+    var tObj = {};
+    for (let i = 0; i < arr.length; i++) {
+      tObj = {
+        data: { From: arr[i].from, To: arr[i].to, Amount: arr[i].amount }
+      }
+      tableData.push(tObj);
+    }
+    console.log(JSON.stringify(tableData));
+    this.tableTomatoPending = tableData;
+  }
+  updateTableTomatoMine() {
+    const arr = this.tomatoChain.blocksToMine;
+    var tableData = [];
+    var tObj = {};
+    var tChildrenArr = [];
+    var tChildrenObj = {};
+    var tAmount = 0;
+    for (let i = 0; i < arr.length; i++) {
+      tAmount = 0;
+      tChildrenArr = [];
+      for (let j = 0; j < arr[i].transactions.length; j++) {
+        tChildrenObj = {
+          data: { ID: arr[i].transactions[j].from, Time: arr[i].transactions[j].to, Amount: arr[i].transactions[j].amount },
+        };
+        tChildrenArr.push(tChildrenObj);
+        tAmount += Number(arr[i].transactions[j].amount);
+      }
+      tObj = {
+        data: { ID: i, Time: arr[i].time.split('(')[0], Amount: tAmount },
+        children: tChildrenArr
+      };
+      tableData.push(tObj);
+    }
+    //console.log(JSON.stringify(tableData));
+    this.tableTomatoMine = tableData;
+    // Update dropdown list
+    var tList = [];
+    for (let i = 0; i < tableData.length; i++) {
+      tList.push(i);
+    }
+    this.modelMine.idList = tList;
+  }
+  updateBlockToMine(id, $event) {
+    $event.preventDefault();
+    this.modelMine.text = this.tomatoChain.blocksToMine[id].text;
+    this.modelMine.id = id;
+    console.log(id);
+  }
+  mineSelBlock($event) {
+    $event.preventDefault();
+    const username = this.util.normalizeInput(this.modelMine.minerName);
+    const idBlock = Number(this.modelMine.id);
+    const key = this.util.normalizeInput(this.modelMine.key);
+    if (!username || !key) {
+      this.showTxtMessage("Please fill all the text fields!");
       return;
     }
-    var re2 = /[A-Za-z0-9+/]+/;
-    textoCifrado = textoCifrado.replace(/(\r\n|\n|\r| )/gm, "");
-    if (!this.matchExact(textoCifrado, re2)) {
-      this.showTextoIncorrecto();
+    const msgMine = this.tomatoChain.mineBlock(key, idBlock, username);
+    if (msgMine == "Block successfully mined! 🤑") {
+      this.updateTableTomatos();
+      this.updateTableTomatoChain();
+      this.updateTablePending();
+      this.updateTableTomatoMine();
+      this.clearFormMine();
+    }
+    setTimeout(() => {  this.showTxtMessage(msgMine); }, 700);
+    console.log(JSON.stringify(this.tomatoChain.chain));
+  }
+  clearFormTrans($event) {
+    $event.preventDefault();
+    this.modelTrans.from = '';
+    this.modelTrans.to = '';
+    this.modelTrans.amount = 0.1;
+  }
+  clearFormMine() {
+    this.modelMine.id = undefined;
+    this.modelMine.text = "";
+    this.modelMine.key = "";
+    this.modelMine.minerName = "";
+    var tList = [];
+    for (let i = 0; i < this.tableTomatoPending.length; i++) {
+      tList.push(i);
+    }
+    this.modelMine.idList = tList;
+  }
+  // VIGENERE
+  decipherVigenere(cipherTxt, key) {
+    if (!cipherTxt || !key) {
+      this.showTxtMessage("Please fill all fields");
+    }
+    this.modelDecipher.clearText = this.vigenere.vigenereDecipher(cipherTxt, key);
+  }
+  clearFormVig($event) {
+    $event.preventDefault();
+    this.modelDecipher.cipherText = '';
+    this.modelDecipher.key = '';
+    this.modelDecipher.clearText = '';
+  }
+  analysisVigenere(cipherText, m) {
+    if (!cipherText){
+      this.showTxtMessage("Please type the Ciphertext.");
+      return;
+    } else if (m <= 0){
+      this.showTxtMessage("Key length must be greater or equal to zero.");
       return;
     }
-    var intP = parseInt(p, 10);
-    var intQ = parseInt(q, 10);
-    if (intP > this.maxNumber || intQ > this.maxNumber) {
-      this.showPrimosIncorrectos();
+    else {
+      cipherText = this.util.normalizeInput(cipherText);
+      this.modelAnlysis.guessKey = this.vigenere.vigenereCryptanalysis(cipherText, m);
       return;
     }
-    this.model2.textoClaro = this.decipherRSA(textoCifrado, parseInt(b, 10), intP, intQ);
-    //this.model2.textoClaro = "AAAAAA";
   }
-
-  generarClave($event, model) {
+  clearFormAn($event) {
     $event.preventDefault();
-    var arr = this.generateKey();
-    model.numN = arr[0];
-    model.numP = arr[1];
-    model.numQ = arr[2];
-    model.numB = arr[3];
+    this.modelAnlysis.cipherText = '';
+    this.modelAnlysis.lenKey = 1;
+    this.modelAnlysis.guessKey = '';
   }
-
-  fillKey($event, model) {
-    $event.preventDefault();
-    this.model1.numB = model.numB;
-    this.model1.numN = model.numN;
-    this.model2.numB = model.numB;
-    this.model2.numP = model.numP;
-    this.model2.numQ = model.numQ;
-  }
-
-  clearForm1($event, model) {
-    $event.preventDefault();
-    model.textoClaro = '';
-    model.textoCifrado = '';
-    model.numN = '';
-    model.numB = '';
-  }
-
-  clearForm2($event, model) {
-    $event.preventDefault();
-    model.textoClaro = '';
-    model.textoCifrado = '';
-    model.numP = '';
-    model.numQ = '';
-    model.numB = '';
-  }
-
-  showClaveIncorrecta() {
+  // DIALOG
+  showTxtMessage(msg) {
     this.dialogService.open(DialogoComponent, {
       context: {
-        title: 'Key Error!',
-        content: 'There are empty or invalid parameters. (n >=' + this.minValueN + ' to encrypt or the text to be decrypted is not divisible by five)'
+        title: 'Messsage! ⚠️',
+        content: msg
       },
     });
-  }
-
-  showTextoIncorrecto() {
-    this.dialogService.open(DialogoComponent, {
-      context: {
-        title: 'Texto Error!',
-        content: 'The ciphertext must have only base 64 digits (a-z, A-Z, 0-9, +, /).'
-      },
-    });
-  }
-
-  showPrimosIncorrectos() {
-    this.dialogService.open(DialogoComponent, {
-      context: {
-        title: 'Key Error!',
-        content: 'The prime numbers p and q must be less than ' + this.maxNumber
-      },
-    });
-  }
-
-  power(x, y, p) {
-    let res = 1;
-    x = x % p;
-
-    if (x === 0) return 0;
-
-    while (y > 0) {
-      if (y & 1) res = (res * x) % p;
-      y = y >> 1;
-      x = (x * x) % p;
-    }
-    return res;
-  }
-
-  gcdExtended(a, b, pair = new Pair(0, 0)) {
-    if (a === 0) {
-      pair.x = 0;
-      pair.y = 1;
-      return b;
-    }
-    let gcd = this.gcdExtended(b % a, a, pair);
-
-    var temp = pair.x;
-    pair.x = pair.y - Math.floor(b / a) * pair.x;
-    pair.y = temp;
-
-    return gcd;
-  }
-  sieveOfEratosthenes(n) {
-    var array = [];
-    var prime = Array.from({ length: n + 1 }, (_, i) => true);
-
-    for (var p = 2; p * p <= n; p++) {
-      if (prime[p] === true) {
-        for (i = p * p; i <= n; i += p) prime[i] = false;
-      }
-    }
-    for (var i = 2; i <= n; i++) {
-      if (prime[i] === true) array.push(i);
-    }
-    return array;
-  }
-  tupleToBase26(array) {
-    var pow = 1;
-    var num = 0;
-    for (var i = array.length - 1; i >= 0; --i) {
-      num += pow * array[i];
-      pow *= 26;
-    }
-    return num;
-  }
-
-  base26ToTriple(num) {
-    var array = [];
-    array.push(num % 26);
-    num -= num % 26;
-    num /= 26;
-    array.push(num % 26);
-    num -= num % 26;
-    num /= 26;
-    array.push(num);
-    return array.reverse();
-  }
-  //Base64 code
-  Base64 = {
-    _Rixits: "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz+/",
-    fromNumber: function (number) {
-      if (
-        isNaN(Number(number)) ||
-        number === null ||
-        number === Number.POSITIVE_INFINITY
-      )
-        throw "The input is not valid";
-      if (number < 0) throw "Can't represent negative numbers now";
-
-      var rixit; // like 'digit', only in some non-decimal radix
-      var residual = Math.floor(number);
-      var result = "";
-      while (true) {
-        rixit = residual % 64;
-        // console.log("rixit : " + rixit);
-        // console.log("result before : " + result);
-        result = this._Rixits.charAt(rixit) + result;
-        // console.log("result after : " + result);
-        // console.log("residual before : " + residual);
-        residual = Math.floor(residual / 64);
-        // console.log("residual after : " + residual);
-
-        if (residual == 0) break;
-      }
-      return result;
-    },
-
-    toNumber: function (rixits) {
-      var result = 0;
-      // console.log("rixits : " + rixits);
-      // console.log("rixits.split('') : " + rixits.split(''));
-      rixits = rixits.split("");
-      for (var e = 0; e < rixits.length; e++) {
-        // console.log("_Rixits.indexOf(" + rixits[e] + ") : " +
-        // this._Rixits.indexOf(rixits[e]));
-        // console.log("result before : " + result);
-        result = result * 64 + this._Rixits.indexOf(rixits[e]);
-        // console.log("result after : " + result);
-      }
-      return result;
-    },
-  };
-
-  cipherRSA(clearText, n, b) {
-    var text = this.util.normalizeInput(clearText);
-    if (text.length % this.blockSize != 0) {
-      var mod = this.blockSize - (text.length % this.blockSize);
-      while (mod > 0) {
-        text += "x";
-        mod--;
-      }
-    }
-    var cipheredText = "";
-
-    if (n < this.minValueN) {
-      console.log("n debe ser mayor o igual a 18279 para poder cifrar");
-      return cipheredText;
-    }
-
-    const dict = {
-      a: 0,
-      b: 1,
-      c: 2,
-      d: 3,
-      e: 4,
-      f: 5,
-      g: 6,
-      h: 7,
-      i: 8,
-      j: 9,
-      k: 10,
-      l: 11,
-      m: 12,
-      n: 13,
-      o: 14,
-      p: 15,
-      q: 16,
-      r: 17,
-      s: 18,
-      t: 19,
-      u: 20,
-      v: 21,
-      w: 22,
-      x: 23,
-      y: 24,
-      z: 25,
-    };
-
-    for (var i = 0; i < text.length / 3; ++i) {
-      var array = [];
-      array.push(dict[text[i * 3]]);
-      array.push(dict[text[i * 3 + 1]]);
-      array.push(dict[text[i * 3 + 2]]);
-      var number = this.power(this.tupleToBase26(array), b, n);
-      //console.log(number);
-      var toPush = this.Base64.fromNumber(number);
-      //console.log(toPush);
-      if (toPush.length < 5) {
-        var need = 5 - toPush.length;
-        for (var j = 0; j < need; ++j) {
-          cipheredText += "0";
-        }
-      }
-      cipheredText += toPush;
-    }
-    return cipheredText;
-  }
-  decipherRSA(text, b, p, q) {
-    var pair = new Pair(0, 0);
-    var n = p * q;
-    var totient = (p - 1) * (q - 1);
-    this.gcdExtended(b, totient, pair);
-    var a = pair.x;
-    while (a < 0) {
-      a += totient;
-      a %= totient;
-    }
-    var clearText = "";
-    var array = [];
-    const dict1 = {
-      0: "a",
-      1: "b",
-      2: "c",
-      3: "d",
-      4: "e",
-      5: "f",
-      6: "g",
-      7: "h",
-      8: "i",
-      9: "j",
-      10: "k",
-      11: "l",
-      12: "m",
-      13: "n",
-      14: "o",
-      15: "p",
-      16: "q",
-      17: "r",
-      18: "s",
-      19: "t",
-      20: "u",
-      21: "v",
-      22: "w",
-      23: "x",
-      24: "y",
-      25: "z",
-    };
-    for (var i = 0; i < text.length / 5; ++i) {
-      array.push(this.Base64.toNumber(text.substring(5 * i, 5 * i + 5)));
-    }
-    for (var i = 0; i < array.length; ++i) {
-      var num = this.power(array[i], a, n);
-      var arr = this.base26ToTriple(num);
-      clearText += dict1[arr[0]];
-      clearText += dict1[arr[1]];
-      clearText += dict1[arr[2]];
-    }
-    return clearText;
-  }
-
-  generateKey() {
-    var p, q;
-    var minPrime = 60;
-    p = Math.floor(Math.random() * this.primeNumber);
-    while (p <= minPrime) {
-      p = Math.floor(Math.random() * this.primeNumber);
-    }
-    q = Math.floor(Math.random() * this.primeNumber);
-    while (q <= minPrime) {
-      q = Math.floor(Math.random() * this.primeNumber);
-    }
-    p = this.primeArray[p];
-    q = this.primeArray[q];
-    var array = [];
-    array.push(p * q);
-    array.push(p);
-    array.push(q);
-    var max = (p - 1) * (q - 1);
-    var b = Math.floor(Math.random() * max);
-    while (this.gcdExtended(b, max) != 1) {
-      b = Math.floor(Math.random() * max);
-    }
-    array.push(b);
-    return array;
   }
 }

@@ -1,9 +1,41 @@
-<div class="row">
-  <div class="col-md-8 offset-md-2">
+<div class="row justify-content-center">
+  <div class="col-md-4">
     <nb-card>
-      <nb-card-header>THIS IS BLOCKCHAIN 🤑</nb-card-header>
+      <nb-card-header>🍅 Send Tomacoins 🍅</nb-card-header>
       <nb-card-body>
-        <h3>COOMING SOON ...</h3>
+        <form (ngSubmit)="sendTransaction(modelTrans.from, modelTrans.to, modelTrans.amount)">
+          <div class="form-group">
+            <label for="fromInput" class="label">From: </label>
+            <input type="text" [(ngModel)]="modelTrans.from" name="fromInput" nbInput fullWidth id="fromInput"
+              placeholder="Name of sending user.">
+          </div>
+          <div class="form-group">
+            <label for="toInput" class="label">To: </label>
+            <input type="text" [(ngModel)]="modelTrans.to" name="toInput" nbInput fullWidth id="toInput"
+              placeholder="Name of receiving user.">
+          </div>
+          <div class="form-group">
+            <label for="amountInput" class="label">Amount: </label>
+            <input type="number" [(ngModel)]="modelTrans.amount" name="amountInput" nbInput fullWidth id="amountInput"
+              step="0.1">
+          </div>
+
+          <div class="buttons">
+            <button type="submit" nbButton status="success"> Send </button>
+            <button (click)="clearFormTrans($event)" nbButton status="warning">Clean Up</button>
+          </div>
+
+        </form>
+      </nb-card-body>
+    </nb-card>
+  </div>
+  <div class="col-md-6">
+    <nb-card>
+      <nb-card-header>Balance of 🍅</nb-card-header>
+      <nb-card-body>
+        <div *ngIf="tableTomatos.length > 0" class="table_container">
+          <ngx-tabla [data]="tableTomatos" [columns]="tableColTomatos" [showSearch]="false"></ngx-tabla>
+        </div>
       </nb-card-body>
     </nb-card>
   </div>
@@ -12,45 +44,107 @@
 <div class="row">
   <div class="col-md-6">
     <nb-card>
-      <nb-card-header>BLOCKCHAIN</nb-card-header>
+      <nb-card-header>View the entire Bl🍅ckchain</nb-card-header>
       <nb-card-body>
-
-        <form (ngSubmit)="cifrar(model1.textoClaro, model1.numN, model1.numB)">
-
-          <div class="form-group">
-            <label for="textoClaro" class="label">Plaintext</label>
-            <textarea rows="4" type="text" [(ngModel)]="model1.textoClaro" name="textoClaro" nbInput fullWidth id="textoClaro"
-              placeholder="Insert the text to be encrypted. Use English alphabet characters."></textarea>
+        <div *ngIf="tableTomatoChain.length > 0" class="table_container">
+          <div class="col-md-12">
+            <label class="label"> You can click on every block to see their Transactions. </label>
           </div>
-          <div class="row">
-            <div class="col align-self-start">
-              <div class="form-group col-md-6">
-                <label for="numN" class="label">Number n:</label>
-                <input class="fix-width" type="number" [(ngModel)]="model1.numN" name="numNC" nbInput id="numNC"
-                  placeholder="Enter n">
-              </div>
+          <br>
+          <ngx-tabla [data]="tableTomatoChain" [columns]="tableColTomatoChain" [showSearch]="true"></ngx-tabla>
+        </div>
+      </nb-card-body>
+    </nb-card>
+  </div>
+
+  <div class="col-md-6">
+    <nb-card>
+      <nb-card-header>List pending Transacti🍅ns</nb-card-header>
+      <nb-card-body>
+        <div *ngIf="tableTomatoPending.length > 0; else msgTrans" class="table_container">
+          <div class="col-md-12">
+            <label class="label"> To be able to mine these Transactions it's necessary to have 4 Pending Transactions to form a new block.</label>
+          </div>
+          <br>
+          <ngx-tabla [data]="tableTomatoPending" [columns]="tableColTomatoPending" [showSearch]="false"></ngx-tabla>
+        </div>
+        <ng-template #msgTrans>
+          <h6> There are currently no pending Transactions ! 😔</h6>
+        </ng-template>
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <nb-card>
+      <nb-card-header>Mine pending Bl🍅cks. </nb-card-header>
+      <nb-card-body>
+        <div class="row" *ngIf="tableTomatoMine.length > 0; else msgTransM">
+          <div class="table_container col-md-6">
+            <ngx-tabla [data]="tableTomatoMine" [columns]="tableColTomatoMine" [showSearch]="true"></ngx-tabla>
+          </div>
+          <div class="col-md-6">
+            <label for="selIdBlock" class="label">Select Block ID to Mine ⛏️: </label>
+            <div class="col-md"></div>
+            <nb-select [(ngModel)]="modelMine.id" id="selIdBlock" name="selIdBlock" placeholder="Select ID" filled
+              status="secondary" shape="round">
+              <nb-option [value]="undefined">.</nb-option>
+              <nb-option *ngFor="let id of modelMine.idList" [value]="id" (click)="updateBlockToMine(id, $event)">{{ id
+                }}</nb-option>
+            </nb-select>
+            <div class="form-group">
+              <label for="cipherText" class="label">Ciphertext to solve:</label>
+              <textarea type="text" [(ngModel)]="modelMine.text" name="cipherText" nbInput readonly fullWidth
+                id="cipherText" placeholder="Here you will find the ciphertext to be solved."></textarea>
             </div>
-          </div>
-          <div class="row">
-            <div class="col align-self-end">
-              <div class="form-group col-md-6">
-                <label for="numB" class="label">Number b:</label>
-                <input class="fix-width" type="number" [(ngModel)]="model1.numB" name="numBC" nbInput id="numBC"
-                  placeholder="Enter b">
-              </div>
+            <div class="form-group">
+              <label for="solKey" class="label">Solution Key:</label>
+              <input type="text" [(ngModel)]="modelMine.key" name="solKey" nbInput fullWidth id="solKey"
+                placeholder="Type the key that decrypts the ciphertext.">
             </div>
+            <div class="form-group">
+              <label for="minerName" class="label">Miner name:</label>
+              <input type="text" [(ngModel)]="modelMine.minerName" name="minerName" nbInput fullWidth id="minerName"
+                placeholder="Type your username.">
+            </div>
+            <button (click)="mineSelBlock($event)" nbButton status="primary">Mine Block!</button>
+          </div>
+        </div>
+        <ng-template #msgTransM>
+          <h6> There are currently no pending Blocks to mine ! 😔 </h6>
+        </ng-template>
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-6">
+    <nb-card>
+      <nb-card-header> Vigenere Decipher </nb-card-header>
+      <nb-card-body>
+        <form (ngSubmit)="decipherVigenere(modelDecipher.cipherText, modelDecipher.key)">
+          <div class="form-group">
+            <label for="cipherTextVi" class="label">Ciphertext:</label>
+            <textarea type="text" [(ngModel)]="modelDecipher.cipherText" name="cipherTextVi" nbInput fullWidth
+              id="cipherTextVi" placeholder="Type the ciphertext to be decrypted."></textarea>
           </div>
           <div class="form-group">
-            <label for="textoCifrado" class="label">Ciphertext</label>
-            <textarea rows="4" type="text" [(ngModel)]="model1.textoCifrado" name="textoCifrado" nbInput fullWidth
-              id="textoCifrado" placeholder="Click on 'ENCRYPT' to view the ciphertext" readonly></textarea>
+            <label for="solKeyVi" class="label">Key:</label>
+            <input type="text" [(ngModel)]="modelDecipher.key" name="solKeyVi" nbInput fullWidth id="solKeyVi"
+              placeholder="Type the key that decrypts the ciphertext.">
           </div>
-
+          <div class="form-group">
+            <label for="clearTextVi" class="label">Cleartext:</label>
+            <textarea type="text" [(ngModel)]="modelDecipher.clearText" name="clearTextVi" nbInput fullWidth readonly
+              id="clearTextVi" placeholder="Here will appear the decrypted text. PRESS DECRYPT!"></textarea>
+          </div>
           <div class="buttons">
-            <button type="submit" nbButton status="primary">Encrypt</button>
-            <button (click)="clearForm1($event, model1)" nbButton status="warning">Clean up</button>
+            <button type="submit" nbButton status="primary"> Decrypt </button>
+            <button (click)="clearFormVig($event)" nbButton status="warning">Clean up</button>
           </div>
-
         </form>
 
       </nb-card-body>
@@ -59,57 +153,31 @@
 
   <div class="col-md-6">
     <nb-card>
-      <nb-card-header>BLOCKCHAIN</nb-card-header>
+      <nb-card-header> Vigenere Cryptoanalysis</nb-card-header>
       <nb-card-body>
-
-        <form (ngSubmit)="descifrar(model2.textoCifrado, model2.numP, model2.numQ, model2.numB)">
+        <form (ngSubmit)="analysisVigenere(modelAnlysis.cipherText, modelAnlysis.lenKey)">
+          <label class="label">Enter your ciphertext and a possible key length, and click 'ANALYZE'.</label>
+          <br>
+          <div class="form-group">
+            <label for="textoCifradoAn" class="label">Ciphertext: </label>
+            <textarea type="text" [(ngModel)]="modelAnlysis.cipherText" name="textoCifradoAn" nbInput fullWidth
+              id="textoCifradoAn" placeholder="Type the cipher text."></textarea>
+          </div>
 
           <div class="form-group">
-            <label for="textoCifrado" class="label">Ciphertext</label>
-            <textarea rows="4" type="text" [(ngModel)]="model2.textoCifrado" name="textoCifrado" nbInput fullWidth
-              id="textoCifrado"
-              placeholder="Insert the text to be decrypted. Use the characters A-Z, a-z, 0-9, + or /."></textarea>
+            <label for="longitudClaveAn" class="label">Key length (m): </label>
+            <input class="block" type="number" [(ngModel)]="modelAnlysis.lenKey" name="longitudClaveAn" nbInput
+              id="longitudClaveAn" min="1">
           </div>
-          <div class="row">
-            <div class="col align-self-start">
-              <div class="form-group col-md-12">
-                <label for="numP" class="label">Prime p:</label>
-                <input class="form-control" type="number" [(ngModel)]="model2.numP" name="numPD" nbInput id="numPD"
-                  placeholder="Enter p">
-              </div>
-            </div>
-            <div class="col align-self-end">
-              <div class="form-group col-md-12">
-                <label for="numQ" class="label">Prime q:</label>
-                <input class="form-control" type="number" [(ngModel)]="model2.numQ" name="numQD" nbInput id="numQD"
-                  placeholder="Enter q">
-              </div>
-            </div>
+          <div class="result-text">
+            <p>Possible Key: <span class="result">{{modelAnlysis.guessKey}}</span></p>
           </div>
-          <div class="row">
-            <div class="col align-self-start">
-              <div class="form-group col-md-6">
-                <label for="numB" class="label">Number b:</label>
-                <input class="fix-width" type="number" [(ngModel)]="model2.numB" name="numBD" nbInput id="numBD"
-                  placeholder="Enter b">
-              </div>
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="textoClaro" class="label">Plaintext</label>
-            <textarea rows="4" type="text" [(ngModel)]="model2.textoClaro" name="textoClaro" nbInput fullWidth id="textoClaro"
-              placeholder="Click on 'DECRYPT' to view the decoded text" readonly></textarea>
-          </div>
-
           <div class="buttons">
-            <button type="submit" nbButton status="primary">Decrypt</button>
-            <button (click)="clearForm2($event, model2)" nbButton status="warning">Clean up</button>
+            <button type="submit" nbButton status="primary">Analyze</button>
+            <button (click)="clearFormAn($event)" nbButton status="warning">Clean Up</button>
           </div>
-
         </form>
-
       </nb-card-body>
     </nb-card>
   </div>
-
 </div>

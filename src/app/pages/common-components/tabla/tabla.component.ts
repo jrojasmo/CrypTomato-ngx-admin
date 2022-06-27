@@ -20,10 +20,11 @@ interface FSEntry {
 export class TablaComponent {
   @Input() private data: TreeNode<FSEntry>[];
   @Input() columns: string[];
+  @Input() showSearch: boolean;
 
   customColumn = 'clave';
-  defaultColumns = [ 'texto' ];
-  allColumns = [ this.customColumn, ...this.defaultColumns ];
+  defaultColumns = ['texto'];
+  allColumns = [this.customColumn, ...this.defaultColumns];
 
   dataSource: NbTreeGridDataSource<FSEntry>;
 
@@ -38,7 +39,7 @@ export class TablaComponent {
     if (changes.columns) {
       this.customColumn = this.columns[0];
       this.defaultColumns = this.columns.slice(1, this.columns.length);
-      this.allColumns = [ this.customColumn, ...this.defaultColumns ];
+      this.allColumns = [this.customColumn, ...this.defaultColumns];
     }
     this.dataSource = this.dataSourceBuilder.create(this.data);
   }
@@ -59,5 +60,23 @@ export class TablaComponent {
     const minWithForMultipleColumns = 400;
     const nextColumnStep = 100;
     return minWithForMultipleColumns + (nextColumnStep * index);
+  }
+}
+@Component({
+  selector: 'ngx-fs-icon',
+  template: `
+    <nb-tree-grid-row-toggle [expanded]="expanded" *ngIf="isDir(); else fileIcon">
+    </nb-tree-grid-row-toggle>
+    <ng-template #fileIcon>
+      <nb-icon icon="file-text-outline"></nb-icon>
+    </ng-template>
+  `,
+})
+export class FsIconComponent {
+  @Input() kind: string;
+  @Input() expanded: boolean;
+
+  isDir(): boolean {
+    return false;
   }
 }
